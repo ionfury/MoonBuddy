@@ -6,11 +6,6 @@ const RequestPromise = require('request-promise');
 const dateFormat = require('dateformat');
 const SUAD = 1091440439;
 
-module.exports = {
-  GetMoonStatusText:getMoonStatusText
-}
-
-
 var getAllObservations = (token,corp,observers) => {
   var promises = [];
 
@@ -100,3 +95,7 @@ var getMoonStatusText = Promise.join(accessToken, extractions, extractionStructu
 
   return display;
 });
+
+module.exports = {
+  GetMoonStatusText:getMoonStatusText
+}

@@ -25,5 +25,3 @@ Client.on('message', msg => {
       .catch(err => msg.channel.send("@IonFury help me i broke"));
   }
 });
-
-Client.login(process.env.token);
