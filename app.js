@@ -1,6 +1,7 @@
 const Discord = require(`discord.js`);
 const Client = new Discord.Client();
 const Moons = require(`./src/Moons.js`);
+const Config = require(`./config.json`);
 
 Client.on('ready', () => {
   console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
