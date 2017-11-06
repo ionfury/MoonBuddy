@@ -2,8 +2,6 @@ const Discord = require(`discord.js`);
 const Client = new Discord.Client();
 const Moons = require(`./src/Moons.js`);
 
-
-
 Client.on('ready', () => {
   console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
 });
@@ -18,7 +16,7 @@ Client.on('message', msg => {
   
   var args = msg.content.slice(Config.prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
-  console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
+  msg.channel.send(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
   if(command == "moons") {
     Moons.GetMoonStatusText
