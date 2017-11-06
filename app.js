@@ -21,8 +21,11 @@ Client.on('message', msg => {
 
   if(command == "moons") {
     Moons.GetMoonStatusText
-      .then(msg.channel.send)
-      .catch(err => msg.channel.send("@IonFury help me i broke"));
+      .then(x => {
+        console.log(x);
+        msg.channel.send(x)
+      })
+      .catch(err => msg.channel.send(err));
   }
 });
 
