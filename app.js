@@ -17,12 +17,11 @@ Client.on('message', msg => {
   
   var args = msg.content.slice(Config.prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
-  msg.channel.send(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
+  console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
   if(command == "moons") {
     Moons.GetMoonStatusText
       .then(x => {
-        console.log(x);
         msg.channel.send(x)
       })
       .catch(err => msg.channel.send(err));
