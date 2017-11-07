@@ -27,8 +27,16 @@ Client.on('message', msg => {
       .catch(err => msg.channel.send(err));
   }
 
+  if(command === "mined") {
+    Moons.GetChunksMined
+      .then(x => {
+        msg.channel.send(x);
+      })
+      .catch(err => msg.channel.send(err));
+  }
+
   if(command === "help") {
-    msg.channel.send(`Try ${Config.prefix}moons`)
+    msg.channel.send(`Try ${Config.prefix}moons or ${Config.prefix} mined.`)
   }
 });
 
