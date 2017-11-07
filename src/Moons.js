@@ -124,7 +124,7 @@ const getMoonStatusText = Promise.join(accessToken, extractions, extractionStruc
   })
   .map(element => {
     var ores = element.moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}%`).reduce((acc, val) => acc + `\n\t${val}`);
-    var display = `${element.displayString}\n\t${ores}`;
+    var display = `\`\`\`${element.displayString}\n\t${ores}\`\`\``;
     return display;
   });
 });

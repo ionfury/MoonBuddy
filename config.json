@@ -78,10 +78,10 @@
     {
       "name":"HHQ-M1 IX - Moon 6",
       "ores":[
-        {"ore":"Monazite","amount":0.2153},
-        {"ore":"x","amount":0.3151},
-        {"ore":"x","amount":0.2670},
-        {"ore":"x","amount":0.2025}
+        {"ore":"Brilliant Gneiss","amount":0.1673},
+        {"ore":"Chromite","amount":0.4632},
+        {"ore":"Flawless Arkonor","amount":0.1672},
+        {"ore":"Scintillating Hemorphite","amount":0.2021}
       ]
     }
   ]
