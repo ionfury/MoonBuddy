@@ -1,5 +1,8 @@
 {
+  "url":"https://esi.tech.ccp.is",
+  "server":"latest",
   "prefix": "!",
+  "corporation_id": 1091440439,
   "bot_admin_role": "Mod",
   "moons":[
     {

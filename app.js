@@ -19,12 +19,16 @@ Client.on('message', msg => {
   var command = args.shift().toLowerCase();
   console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
-  if(command == "moons") {
+  if(command === "moons") {
     Moons.GetMoonStatusText
       .then(x => {
         msg.channel.send(x)
       })
       .catch(err => msg.channel.send(err));
+  }
+
+  if(command === "help") {
+    msg.channel.send(`Try ${Config.prefix}moons`)
   }
 });
 

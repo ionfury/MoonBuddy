@@ -12,7 +12,6 @@
     "bluebird": "^3.5.1",
     "dateformat": "^3.0.2",
     "discord.js": "^11.2.1",
-    "eve-swagger": "^0.3.3",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }

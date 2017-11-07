@@ -1,16 +1,6 @@
 const RequestPromise = require('request-promise');
+const Promise = require('bluebird');
 const Config = require(`./../config.json`);
-
-module.exports = {
-  AuthToken: authToken,
-  VerifyToken: verifyToken,
-  RefreshToken: refreshToken,
-  EsiObservers:esiObservers,
-  EsiObserve:esiObserve,
-  EsiPublicInfo:esiPublicInfo,
-  EsiStructureInfo:esiStructureInfo,
-  EsiExtractions:esiExtractions
-}
 
 /**
  * Authroizes a token through ESI. 
@@ -74,52 +64,31 @@ function verifyToken(token) {
   return RequestPromise(options);
 }
 
-function esiObservers(token,corporation_id) {
+/**
+ * Creates a promise to ESI.
+ * @param {*options} options Yeah figure it out asshole. 
+ * @returns a Request Promise
+ */
+function esiGet(options) {
+  var route = options.route || ``;
+  var parameters = options.parameters || ``;
+  var token = options.token || ``;
+  var page = options.page || 1;
+  var datasource = options.datasource || `tranquility`;
+  var server = options.server || Config.server;
+  var url = options.url || Config.url;
+
   var options = {
     method: 'GET',
-    url: `https://esi.tech.ccp.is/latest/corporation/${corporation_id}/mining/observers/?datasource=tranquility&page=1&token=${token}`,
-    headers: {}
+    url: `${url}/${server}/${route}?datasource=${datasource}&page=${page}&token=${token}&${parameters}`
   }
-
+  
   return RequestPromise(options);
 }
 
-function esiObserve(token, corporation_id, observer_id) {
-  var options = {
-    method: 'GET',
-    url: `https://esi.tech.ccp.is/latest/corporation/${corporation_id}/mining/observers/${observer_id}/?datasource=tranquility&page=1&token=${token}`,
-    headers: {}
-  }
-
-  return RequestPromise(options);
-}
-
-function esiPublicInfo(token, character_id) {
-  var options = {
-    method: 'GET',
-    url: `https://esi.tech.ccp.is/latest/characters/${character_id}/?datasource=tranquility&page=1&token=${token}`,
-    headers: {}
-  }
-
-  return RequestPromise(options);
-}
-
-function esiStructureInfo(token, structure_id) {
-  var options = {
-    method: 'GET',
-    url: `https://esi.tech.ccp.is/latest/universe/structures/${structure_id}/?datasource=tranquility&page=1&token=${token}`,
-    headers: {}
-  }
-
-  return RequestPromise(options);
-}
-
-function esiExtractions(token, corporation_id) {
-  var options = {
-    method: 'GET',
-    url: `https://esi.tech.ccp.is/latest/corporation/${corporation_id}/mining/extractions/?datasource=tranquility&page=1&token=${token}`,
-    headers: {}
-  }
-
-  return RequestPromise(options);
+module.exports = {
+  AuthToken: authToken,
+  VerifyToken: verifyToken,
+  RefreshToken: refreshToken,
+  EsiGet: esiGet
 }
