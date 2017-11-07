@@ -1,58 +1,9 @@
-const Config = require(`../config.json`);
-const Promise = require('bluebird');
-const Api = require(`./Api.js`);
-const dateFormat = require('dateformat');
+let Config = require(`../config.json`);
+let Promise = require('bluebird');
+let Api = require(`./Api.js`);
+let dateFormat = require('dateformat');
 
-var expiredBy = new Date();
-expiredBy.setDate(expiredBy.getDate() - 5); // 5 days ago
-
-/**
- * Gets an access token
- * @returns a RequestPromise.
- */
-
- function getAccessToken() {
-   return Api.RefreshToken(process.env.refresh_token)
-    .then(x => {return x.access_token});
- }
 /*
-var accessToken = Api.RefreshToken(process.env.refresh_token)
-  .then(x => {return x.access_token});
-  */
-/**
- * Gets the observers
- * @returns a RequestPromise.
- */
-
-function getObservers() {
-  return getAccessToken()
-  .then(token => Api.EsiGet({token:token, route:`corporation/${Config.corporation_id}/mining/observers/`}))
-  .then(JSON.parse);
-}
-
-function getObserved() {
-  return Promise.join(getAccessToken(), getObservers(), (accessToken, observers) => 
-  {
-    var promises = [];
-    
-    observers.forEach(observer => 
-      promises.push(Api.EsiGet({token:accessToken, route:`corporation/${Config.corporation_id}/mining/observers/${observer.observer_id}/`})
-      .then(JSON.parse)));
-
-    return Promise.all(promises);
-  });
-}
-
-function getUniqueVolumes() {
-  return Promise.join(getAccessToken(), getObserved(), (accessToken, observed) => {
-    var flattened = observed.reduce((prev, curr) => prev.concat(curr))
-
-    var uniqueTypes = [...new Set(flattened.map(item => item.type_id))];
-    
-    return Promise.map(uniqueTypes, type => Api.EsiGet({token:accessToken, route:`universe/types/${type}`}).then(JSON.parse));
-  });
-}
-
 function getUniqueNames() {
   return Promise.join(getAccessToken(), getObserved(), (accessToken, observed) => 
   {
@@ -66,33 +17,14 @@ function getUniqueNames() {
 
     return Promise.all(promises);
   });
-}
+}*/
 
-function getObserverStructures() {
-  return Promise.join(getAccessToken(), getObservers(), (accessToken, observers) => 
-  {
-    var promises = [];
-
-    observers.forEach(observer => 
-      promises.push(
-        Api.EsiGet({token:accessToken, route:`universe/structures/${observer.observer_id}/`})
-        .then(JSON.parse)));
-
-    return Promise.all(promises);
-  });
-}
-
-function getExtractions() {
-  return getAccessToken()
-    .then(token => 
-    {
-      return Api.EsiGet({token:token,route:`corporation/${Config.corporation_id}/mining/extractions/`}).then(JSON.parse);
-    });
-}
-
-function getExtractionStructures() {
-  return Promise.join(getAccessToken(), getExtractions(), (accessToken, extractions) => 
-  {
+function getMoonStatusText() {
+  let getAccessToken = Api.RefreshToken(process.env.refresh_token).then(x => {return x.access_token});
+  let getExtractions = getAccessToken
+    .then(token => Api.EsiGet({token:token, route:`corporation/${Config.corporation_id}/mining/extractions/`}))
+    .then(JSON.parse);
+  let getExtractionStructures = Promise.join(getAccessToken, getExtractions, (accessToken, extractions) => {
     var promises = [];
     
     extractions.forEach(extractor => 
@@ -102,10 +34,8 @@ function getExtractionStructures() {
 
     return Promise.all(promises);
   });
-}
 
-function getMoonStatusText() {
-  return Promise.join(getAccessToken(), getExtractions(), getExtractionStructures(), (accessToken, extractions, extractionStructures) => {
+  return Promise.join(getAccessToken, getExtractions, getExtractionStructures, (accessToken, extractions, extractionStructures) => {
     return extractionStructures.map((structure, index) => {
       var extraction = extractions[index];
       extractionStartTime = Date.parse(extraction.extraction_start_time);
@@ -141,8 +71,43 @@ function getMoonStatusText() {
 }
 
 function getChunksMined(){
-  return Promise.join(getAccessToken(), getObservers(), getObserved(), getUniqueVolumes(), getObserverStructures(), (accessToken, observers, observed, uniqueVolumes, observerStructures) => {
+  let getAccessToken = Api.RefreshToken(process.env.refresh_token).then(x => {return x.access_token});
+  let getObservers = getAccessToken
+    .then(token => Api.EsiGet({token:token, route:`corporation/${Config.corporation_id}/mining/observers/`}))
+    .then(JSON.parse);
+  let getObserved = Promise.join(getAccessToken, getObservers, (accessToken, observers) => 
+  {
+    var promises = [];
     
+    observers.forEach(observer => 
+      promises.push(Api.EsiGet({token:accessToken, route:`corporation/${Config.corporation_id}/mining/observers/${observer.observer_id}/`})
+        .then(JSON.parse)));
+
+    return Promise.all(promises);
+  });
+  let getUniqueVolumes = Promise.join(getAccessToken, getObserved, (accessToken, observed) => {
+    var flattened = observed.reduce((prev, curr) => prev.concat(curr))
+
+    var uniqueTypes = [...new Set(flattened.map(item => item.type_id))];
+    
+    return Promise.map(uniqueTypes, type => Api.EsiGet({token:accessToken, route:`universe/types/${type}`}).then(JSON.parse));
+  });
+  let getObserverStructures =  Promise.join(getAccessToken, getObservers, (accessToken, observers) => {
+    var promises = [];
+
+    observers.forEach(observer => 
+      promises.push(
+        Api.EsiGet({token:accessToken, route:`universe/structures/${observer.observer_id}/`})
+          .then(JSON.parse)));
+
+    return Promise.all(promises);
+  });
+
+  return Promise.join(getAccessToken, getObservers, getObserved, getUniqueVolumes, getObserverStructures, (accessToken, observers, observed, uniqueVolumes, observerStructures) => {
+        
+    var expiredBy = new Date();
+    expiredBy.setDate(expiredBy.getDate() - 5); // 5 days ago
+
     observers.forEach((observer, index) => observed[index] = observed[index].filter(record => {return new Date(record.last_updated) > expiredBy}))
 
     var volumeMined = observed.map(observation => observation.reduce((accu, curr) => {
@@ -162,6 +127,6 @@ function getChunksMined(){
 }
 
 module.exports = {
-  GetMoonStatusText:getMoonStatusText(),
-  GetChunksMined:getChunksMined()
+  GetMoonStatusText:getMoonStatusText,
+  GetChunksMined:getChunksMined
 }

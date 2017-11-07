@@ -1,6 +1,6 @@
-const RequestPromise = require('request-promise');
-const Promise = require('bluebird');
-const Config = require(`./../config.json`);
+let RequestPromise = require('request-promise');
+let Promise = require('bluebird');
+let Config = require(`./../config.json`);
 
 /**
  * Authroizes a token through ESI. 
@@ -69,7 +69,7 @@ function verifyToken(token) {
  * @param {*options} options Yeah figure it out asshole. 
  * @returns a Request Promise
  */
-function esiGet(options) {
+const esiGet = (options) => {
   var route = options.route || ``;
   var parameters = options.parameters || ``;
   var token = options.token || ``;
