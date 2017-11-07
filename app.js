@@ -20,7 +20,7 @@ Client.on('message', msg => {
   console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
   if(command === "moons") {
-    Moons.GetMoonStatusText
+    Moons.GetMoonStatusText()
       .then(x => {
         msg.channel.send(x)
       })
@@ -28,7 +28,7 @@ Client.on('message', msg => {
   }
 
   if(command === "mined") {
-    Moons.GetChunksMined
+    Moons.GetChunksMined()
       .then(x => {
         msg.channel.send(x);
       })
