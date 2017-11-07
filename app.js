@@ -36,7 +36,7 @@ Client.on('message', msg => {
   }
 
   if(command === "help") {
-    msg.channel.send(`Try ${Config.prefix}moons or ${Config.prefix} mined.`)
+    msg.channel.send(`Try ${Config.prefix}moons (moon extraction timers) or ${Config.prefix}mined (moon mining in the last 5 days).`)
   }
 });
 
