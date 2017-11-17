@@ -3,6 +3,7 @@ let Promise = require('bluebird');
 let Api = require(`./Api.js`);
 let dateFormat = require('dateformat');
 
+
 /**
  * Gets a promise to return an access token.
  * @param {string} refreshToken The refresh token.
@@ -124,11 +125,11 @@ function getMoonStatusPromise(accessTokenPromise, extractionsPromise, extraction
       moonID = extractions.moon_id;
 
       var minedVolume = Math.round((chunkArrivalTime - extractionStartTime)/60000/60*20000);
-      var arrival = dateFormat(chunkArrivalTime, "yyyy-mm-dd h:MM:ss");
+      var arrival = dateFormat(chunkArrivalTime, "mm-dd h:MM");
       var now = new Date();
       var remaining = Math.round((chunkArrivalTime - now)/60000/60);
 
-      var displayString = `${structure.name} - ${minedVolume.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m/3 @ ${arrival} (${remaining} hours)`;
+      var displayString = `${structure.name} - ${minedVolume.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m3 @ ${arrival} (${remaining}h)`;
       
       var moon = Config.moons.find(moon => {
         return moon.id == moonID;
@@ -140,7 +141,7 @@ function getMoonStatusPromise(accessTokenPromise, extractionsPromise, extraction
       return a.remaining - b.remaining;
     })
     .map(element => {
-      var ores = element.moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}% (${Math.round(ore.amount*element.volume,2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m/3)`).reduce((acc, val) => acc + `\n\t${val}`);
+      var ores = element.moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}% (${Math.round(ore.amount*element.volume,2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m3)`).reduce((acc, val) => acc + `\n\t${val}`);
       var display = `\`\`\`${element.displayString}\n\t${ores}\`\`\``;
       return display;
     });

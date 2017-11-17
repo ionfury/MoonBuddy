@@ -2,6 +2,7 @@ let RequestPromise = require('request-promise');
 let Promise = require('bluebird');
 let Config = require(`./../config.json`);
 
+
 /**
  * Authroizes a token through ESI. 
  * @param {string} token The code.
