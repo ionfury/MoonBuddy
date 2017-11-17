@@ -7,6 +7,7 @@
   "moons":[
     {
       "name":"HHQ-M1 VIII - Moon 1",
+      "id":40196917,
       "ores":[
         {"ore":"Flawless Arkonor","amount":0.1776},
         {"ore":"Sperrylite","amount":0.3695},
@@ -15,6 +16,7 @@
     },
     {
       "name":"CZ6U-1 I - Moon 17",
+      "id":40199017,
       "ores":[
         {"ore":"Monazite","amount":0.2153},
         {"ore":"Platinoid Omber","amount":0.3151},
@@ -24,6 +26,7 @@
     },
     {
       "name":"A-CJGE VII - Moon 19",
+      "id":40197017,
       "ores":[
         {"ore":"Glossy Scordite","amount":0.587},
         {"ore":"Opulent Pyroxeres","amount":0.1965},
@@ -33,6 +36,7 @@
     },
     {
       "name":"E1UU-3 VI - Moon 1",
+      "id":40199102,
       "ores":[
         {"ore":"Cinnabar","amount":0.3170},
         {"ore":"Immaculate Jaspet","amount":0.1782},
@@ -42,6 +46,7 @@
     },
     {
       "name":"HHQ-M1 IX - Moon 11",
+      "id":40196938,
       "ores":[
         {"ore":"Brilliant Gneiss","amount":0.1645},
         {"ore":"Cinnabar","amount":0.3189},
@@ -51,6 +56,7 @@
     },
     {
       "name":"H-T40Z VII - Moon 1",
+      "id":40199676,
       "ores":[
         {"ore":"Dazzling Spodumain","amount":0.3900},
         {"ore":"Sparkling Plagioclase","amount":0.2048},
@@ -60,6 +66,7 @@
     },
     {
       "name":"P9F-ZG IX - Moon 20",
+      "40200865": 40200865,
       "ores":[
         {"ore":"Cinnabar","amount":0.3205},
         {"ore":"Flawless Arkonor","amount":0.3176},
@@ -77,6 +84,7 @@
     },
     {
       "name":"HHQ-M1 IX - Moon 6",
+      "id":40196932,
       "ores":[
         {"ore":"Brilliant Gneiss","amount":0.1673},
         {"ore":"Chromite","amount":0.4632},

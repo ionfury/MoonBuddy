@@ -3,28 +3,34 @@ let Promise = require('bluebird');
 let Api = require(`./Api.js`);
 let dateFormat = require('dateformat');
 
-/*
-function getUniqueNames() {
-  return Promise.join(getAccessToken(), getObserved(), (accessToken, observed) => 
-  {
-    var promises = [];
+/**
+ * Gets a promise to return an access token.
+ * @param {string} refreshToken The refresh token.
+ * @returns A RequestPromise.
+ */
+function getAccessTokenPromise(refreshToken) {
+  return Api.RefreshToken(refreshToken)
+    .then(x => x.access_token);
+}
 
-    observed.forEach(observer => 
-      observer.forEach(observed => 
-        promises.push(
-          Api.EsiGet({token:accessToken, route:`characters/${observed.character_id}/`})
-          .then(JSON.parse))));
-
-    return Promise.all(promises);
-  });
-}*/
-
-function getMoonStatusText() {
-  let getAccessToken = Api.RefreshToken(process.env.refresh_token).then(x => {return x.access_token});
-  let getExtractions = getAccessToken
-    .then(token => Api.EsiGet({token:token, route:`corporation/${Config.corporation_id}/mining/extractions/`}))
+/**
+ * Gets a promise to return extractions.
+ * @param {string} accessToken The access token.
+ * @returns A RequestPromise.
+ */
+function getExtractionPromise(accessToken) {
+  return Api.EsiGet({token:accessToken, route:`corporation/${Config.corporation_id}/mining/extractions/`})
     .then(JSON.parse);
-  let getExtractionStructures = Promise.join(getAccessToken, getExtractions, (accessToken, extractions) => {
+}
+
+/**
+ * Gets a promise to return extraction structures
+ * @param {Promise} accessTokenPromise The access token promise.
+ * @param {Promise} extractionsPromise the extractions promise.
+ * @returns A RequestPromise.
+ */
+function getExtractionStructuresPromise(accessTokenPromise, extractionsPromise) {
+  return Promise.join(accessTokenPromise, extractionsPromise, (accessToken, extractions) => {
     var promises = [];
     
     extractions.forEach(extractor => 
@@ -34,48 +40,26 @@ function getMoonStatusText() {
 
     return Promise.all(promises);
   });
-
-  return Promise.join(getAccessToken, getExtractions, getExtractionStructures, (accessToken, extractions, extractionStructures) => {
-    return extractionStructures.map((structure, index) => {
-      var extraction = extractions[index];
-      extractionStartTime = Date.parse(extraction.extraction_start_time);
-      chunkArrivalTime = Date.parse(extraction.chunk_arrival_time);
-      naturalDecayTime = Date.parse(extraction.natural_decay_time);
-
-      var brewTime = Math.round((chunkArrivalTime - extractionStartTime)/60000/60*20000);
-      var arrival = dateFormat(chunkArrivalTime, "yyyy-mm-dd h:MM:ss");
-      var now = new Date();
-      var remaining = Math.round((chunkArrivalTime - now)/60000/60);
-
-      var displayString = `${structure.name} - ${brewTime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m/3 @ ${arrival} (${remaining} hours)`;
-      
-      var ores = "";
-
-      var moon = Config.moons.find(moon => {
-        return moon.name.substring(0,5) === structure.name.substring(0,5);
-      });
-
-      ores = "\t" + moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}%`).reduce((acc, val) => acc + `\n\t${val}`);
-
-      return {"displayString":displayString, "remaining":remaining, "moon":moon};
-    })
-    .sort((a, b) => {
-      return a.remaining - b.remaining;
-    })
-    .map(element => {
-      var ores = element.moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}%`).reduce((acc, val) => acc + `\n\t${val}`);
-      var display = `\`\`\`${element.displayString}\n\t${ores}\`\`\``;
-      return display;
-    });
-  });
 }
 
-function getChunksMined(){
-  let getAccessToken = Api.RefreshToken(process.env.refresh_token).then(x => {return x.access_token});
-  let getObservers = getAccessToken
-    .then(token => Api.EsiGet({token:token, route:`corporation/${Config.corporation_id}/mining/observers/`}))
+/**
+ * Gets a promise to return observers.
+ * @param {string} accessToken The access token.
+ * @returns A RequestPromise.
+ */
+function getObserversPromise(accessToken) {
+  return Api.EsiGet({token:accessToken, route:`corporation/${Config.corporation_id}/mining/observers/`})
     .then(JSON.parse);
-  let getObserved = Promise.join(getAccessToken, getObservers, (accessToken, observers) => 
+}
+
+/**
+ * Gets a promise to return observed information
+ * @param {Promise} accessTokenPromise The access token promise.
+ * @param {Promise} observersPromise the observers promise.
+ * @returns A RequestPromise.
+ */
+function getObservedPromise(accessTokenPromise, observersPromise) {
+  return Promise.join(accessTokenPromise, observersPromise, (accessToken, observers) => 
   {
     var promises = [];
     
@@ -85,14 +69,32 @@ function getChunksMined(){
 
     return Promise.all(promises);
   });
-  let getUniqueVolumes = Promise.join(getAccessToken, getObserved, (accessToken, observed) => {
+}
+
+/**
+ * Gets a promise to return unique volumes of observed info
+ * @param {Promise} accessTokenPromise The access token promise.
+ * @param {Promise} observedPromise the observed promise.
+ * @returns A RequestPromise.
+ */
+function getUniqueVolumesPromise(accessTokenPromise, observedPromise) {
+  return Promise.join(accessTokenPromise, observedPromise, (accessToken, observed) => {
     var flattened = observed.reduce((prev, curr) => prev.concat(curr))
 
     var uniqueTypes = [...new Set(flattened.map(item => item.type_id))];
     
     return Promise.map(uniqueTypes, type => Api.EsiGet({token:accessToken, route:`universe/types/${type}`}).then(JSON.parse));
   });
-  let getObserverStructures =  Promise.join(getAccessToken, getObservers, (accessToken, observers) => {
+}
+
+/**
+ * Gets a promise to return structure info for observers
+ * @param {*Promise} accessTokenPromise The access token promise.
+ * @param {*Promise} observersPromise the observers promise.
+ * @returns A RequestPromise.
+ */
+function getObserverStructuresPromise(accessTokenPromise, observersPromise) {
+  return Promise.join(accessTokenPromise, observersPromise, (accessToken, observers) => {
     var promises = [];
 
     observers.forEach(observer => 
@@ -102,8 +104,58 @@ function getChunksMined(){
 
     return Promise.all(promises);
   });
+}
 
-  return Promise.join(getAccessToken, getObservers, getObserved, getUniqueVolumes, getObserverStructures, (accessToken, observers, observed, uniqueVolumes, observerStructures) => {
+/**
+ * Gets a promise to return json info about current moons.
+ * @param {*Promise} accessTokenPromise The access token promise.
+ * @param {*Promise} extractionsPromise The extraction Promise.
+ * @param {*Promise} extractionStructuresPromise The extraction structures promise.
+ * @returns A request promise.
+ */
+function getMoonStatusPromise(accessTokenPromise, extractionsPromise, extractionStructuresPromise) {
+  return Promise.join(accessTokenPromise, extractionsPromise, extractionStructuresPromise, (accessToken, extractions, extractionStructures) => {
+    return extractionStructures.map((structure, index) => {
+      var extraction = extractions[index];
+
+      extractionStartTime = Date.parse(extraction.extraction_start_time);
+      chunkArrivalTime = Date.parse(extraction.chunk_arrival_time);
+      naturalDecayTime = Date.parse(extraction.natural_decay_time);
+      moonID = extractions.moon_id;
+
+      var minedVolume = Math.round((chunkArrivalTime - extractionStartTime)/60000/60*20000);
+      var arrival = dateFormat(chunkArrivalTime, "yyyy-mm-dd h:MM:ss");
+      var now = new Date();
+      var remaining = Math.round((chunkArrivalTime - now)/60000/60);
+
+      var displayString = `${structure.name} - ${minedVolume.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m/3 @ ${arrival} (${remaining} hours)`;
+      
+      var moon = Config.moons.find(moon => {
+        return moon.id == moonID;
+      });
+
+      return {"displayString":displayString, "remaining":remaining, "moon":moon, "volume": minedVolume};
+    })
+    .sort((a, b) => {
+      return a.remaining - b.remaining;
+    })
+    .map(element => {
+      var ores = element.moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}% (${Math.round(ore.amount*element.volume,2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m/3)`).reduce((acc, val) => acc + `\n\t${val}`);
+      var display = `\`\`\`${element.displayString}\n\t${ores}\`\`\``;
+      return display;
+    });
+  });
+}
+
+/**
+ * Gets a promise to return info about currently mined moons.
+ * @param {*Promise} getObserversPromise The observers promise.
+ * @param {*Promise} getObservedPromise The observed promise.
+ * @param {*Promise} getUniqueVolumesPromise The unique volumes promise.
+ * @param {*Promise} getObserverStructuresPromise The structures promise.
+ */
+function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise) {
+  return Promise.join(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, (observers, observed, uniqueVolumes, observerStructures) => {
         
     var expiredBy = new Date();
     expiredBy.setDate(expiredBy.getDate() - 5); // 5 days ago
@@ -124,6 +176,32 @@ function getChunksMined(){
 
     return mined;
   });
+}
+
+/**
+ * Gets information about current status of moons.
+ * @returns Moon status text.
+ */
+function getMoonStatusText() {
+  let getAccessToken = getAccessTokenPromise(process.env.refresh_token);
+  let getExtractions = getAccessToken.then(getExtractionPromise);
+  let getExtractionStructures = getExtractionStructuresPromise(getAccessToken, getExtractions);
+
+  return getMoonStatusPromise(getAccessToken, getExtractions, getExtractionStructures);
+}
+
+/**
+ * Gets information about the moon chunks currently being mined. 
+ * @returns Moon chunks text.
+ */
+function getChunksMined(){
+  let getAccessToken = getAccessTokenPromise(process.env.refresh_token);
+  let getObservers = getAccessToken.then(getObserversPromise);
+  let getObserved = getObservedPromise(getAccessToken, getObservers);
+  let getUniqueVolumes = getUniqueVolumesPromise(getAccessToken, getObserved);
+  let getObserverStructures = getObserverStructuresPromise(getAccessToken, getObservers);
+
+  return getChunksMinedPromise(getObservers, getObserved, getUniqueVolumes, getObserverStructures);
 }
 
 module.exports = {
