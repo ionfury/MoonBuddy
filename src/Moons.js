@@ -133,6 +133,7 @@ console.log(extraction);
       var displayString = `${structure.name} - ${minedVolume.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m3 @ ${arrival} (${remaining}h)`;
       
       var moon = Config.moons.find(moon => {
+        console.log(`${moon.id} == ${moonID}`)
         return moon.id == moonID;
       });
 
