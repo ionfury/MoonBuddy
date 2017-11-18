@@ -119,11 +119,11 @@ function getMoonStatusPromise(accessTokenPromise, extractionsPromise, extraction
   return Promise.join(accessTokenPromise, extractionsPromise, extractionStructuresPromise, (accessToken, extractions, extractionStructures) => {
     return extractionStructures.map((structure, index) => {
       var extraction = extractions[index];
-console.log(extraction);
+      
       extractionStartTime = Date.parse(extraction.extraction_start_time);
       chunkArrivalTime = Date.parse(extraction.chunk_arrival_time);
       naturalDecayTime = Date.parse(extraction.natural_decay_time);
-      moonID = extractions.moon_id;
+      moonID = extraction.moon_id;
 
       var minedVolume = Math.round((chunkArrivalTime - extractionStartTime)/60000/60*20000);
       var arrival = dateFormat(chunkArrivalTime, "mm-dd h:MM");
@@ -133,7 +133,6 @@ console.log(extraction);
       var displayString = `${structure.name} - ${minedVolume.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m3 @ ${arrival} (${remaining}h)`;
       
       var moon = Config.moons.find(moon => {
-        console.log(`${moon.id} == ${moonID}`)
         return moon.id == moonID;
       });
 
@@ -143,9 +142,6 @@ console.log(extraction);
       return a.remaining - b.remaining;
     })
     .map(element => {
-      console.log(element)
-      if(!element.moon)
-        return '';
       var ores = element.moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}% (${Math.round(ore.amount*element.volume,2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m3)`).reduce((acc, val) => acc + `\n\t${val}`);
       var display = `\`\`\`${element.displayString}\n\t${ores}\`\`\``;
       return display;
