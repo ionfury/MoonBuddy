@@ -242,7 +242,12 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
         return `\t${x.ore}: ${x.mined}/${x.mineable} m3 (${Math.round(x.mined/x.mineable*100,2)}%)`;
       }).join('\n');
 
-      var expired = naturalDecayTime < new Date(Date.now()) ? '(EXPIRED)' : '';
+      var arrival = dateFormat(naturalDecayTime, "mm-dd h:MM");
+      var now = new Date();
+      var remaining = Math.round((chunkArrivalTime - now)/60000/60);
+
+      var expired = naturalDecayTime < new Date(Date.now()) ? '(EXPIRED)' : `${remaining}`;
+
 
       return output = '```'+`${moon.name}${expired}: ${extractedVolume}/${mineableVolume} m3 (${Math.round(extractedVolume/mineableVolume*100,2)}%)\n${oreBreakdownString}`+'```';
     });
