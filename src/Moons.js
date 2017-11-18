@@ -4,6 +4,7 @@ let Api = require(`./Api.js`);
 let dateFormat = require('dateformat');
 let DB = require(`./db.js`);
 
+
 /**
  * Gets a promise to return an access token.
  * @param {string} refreshToken The refresh token.
@@ -182,10 +183,10 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
 
     var extractionData = [];
     extractionsInProgress.forEach((extraction, index) => {
-      var miningStart = new Date(extraction.chunk_arrival_time);
-      var miningEnd = new Date(extraction.natural_decay_time);
-
-     // var tempStart = miningStart.setDate(miningStart.getDate() - 7); // 10 days ago
+      //var miningStart = new Date(extraction.chunk_arrival_time);
+      //var miningEnd = new Date(extraction.natural_decay_time);
+    var miningStart = new Date(extraction.chunk_arrival_time);
+    var miningEnd = miningStart.setDate(miningStart.getDate() + 3); //mining lasts 3 days
 
       var observerIndex = observers.map(observer => observer.observer_id).indexOf(extraction.structure_id);
 
@@ -210,10 +211,16 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       });
     });
 
+    extractionData.sort((x, y) => {
+      return Date.parse(x.natural_decay_time) > Date.parse(y.natural_decay_time);
+    });
+
     var outputInfo = extractionData.map(moon => {
       var extractionStartTime = Date.parse(moon.extraction_start_time);
       var chunkArrivalTime = Date.parse(moon.chunk_arrival_time);
       var naturalDecayTime = Date.parse(moon.natural_decay_time);
+      var x = new Date(moon.chunk_arrival_time);
+      var miningEnd = x.setDate(x.getDate() + 3); //mining lasts 3 days
 
       var mineableVolume = Math.round((chunkArrivalTime - extractionStartTime)/60000/60*20000);
 
@@ -243,12 +250,11 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       }).join('\n');
 
       var now = new Date();
-      var remaining = Math.round(( Date.parse(chunkArrivalTime) - now)/60000/60);
+      var remaining = Math.round((x - now)/60000/60);
 
-      var expired = naturalDecayTime < new Date(Date.now()) ? '(EXPIRED)' : `${remaining}`;
+      var expired = miningEnd < new Date(Date.now()) ? '(EXPIRED)' : `(${remaining}h remain)`;
 
-
-      return output = '```'+`${moon.name}${expired}: ${extractedVolume}/${mineableVolume} m3 (${Math.round(extractedVolume/mineableVolume*100,2)}%)\n${oreBreakdownString}`+'```';
+      return output = '```'+`${moon.name} ${expired}: ${extractedVolume}/${mineableVolume} m3 (${Math.round(extractedVolume/mineableVolume*100,2)}%)\n${oreBreakdownString}`+'```';
     });
 
     return outputInfo.join('\n');
