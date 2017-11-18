@@ -66,7 +66,7 @@
     },
     {
       "name":"P9F-ZG IX - Moon 20",
-      "40200865": 40200865,
+      "id": 40200865,
       "ores":[
         {"ore":"Cinnabar","amount":0.3205},
         {"ore":"Flawless Arkonor","amount":0.3176},
@@ -76,6 +76,7 @@
     },
     {
       "name":"CR-0E5 V - Moon 17",
+      "id":40198356,
       "ores":[
         {"ore":"Bitumens","amount":0.1869},
         {"ore":"Brilliant Gneiss","amount":0.4940},
