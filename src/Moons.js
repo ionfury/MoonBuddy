@@ -119,7 +119,7 @@ function getMoonStatusPromise(accessTokenPromise, extractionsPromise, extraction
   return Promise.join(accessTokenPromise, extractionsPromise, extractionStructuresPromise, (accessToken, extractions, extractionStructures) => {
     return extractionStructures.map((structure, index) => {
       var extraction = extractions[index];
-
+console.log(extraction);
       extractionStartTime = Date.parse(extraction.extraction_start_time);
       chunkArrivalTime = Date.parse(extraction.chunk_arrival_time);
       naturalDecayTime = Date.parse(extraction.natural_decay_time);
@@ -142,6 +142,7 @@ function getMoonStatusPromise(accessTokenPromise, extractionsPromise, extraction
       return a.remaining - b.remaining;
     })
     .map(element => {
+      console.log(element)
       var ores = element.moon.ores.map(ore => `${ore.ore} - ${Math.round(ore.amount*100,2)}% (${Math.round(ore.amount*element.volume,2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} m3)`).reduce((acc, val) => acc + `\n\t${val}`);
       var display = `\`\`\`${element.displayString}\n\t${ores}\`\`\``;
       return display;
