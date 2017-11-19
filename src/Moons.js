@@ -158,10 +158,10 @@ function refreshExtractionData(extraction) {
         return DB.ExtractionAdd(extraction);
       }
       // moon chunk has arrived, add new extraction
-      var arrivalTime = new Date(result.chunk_arrival_time);
+      var arrivalTime = new Date(extraction.chunk_arrival_time);
       if(arrivalTime < new Date(Date.now())) {
         console.log(`Updating extraction ${extraction}`)
-        return DB.ExtractionAdd(extraction);
+       // return DB.ExtractionAdd(extraction);
       }
     });
 }
