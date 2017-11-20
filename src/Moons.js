@@ -4,7 +4,6 @@ let Api = require(`./Api.js`);
 let dateFormat = require('dateformat');
 let DB = require(`./db.js`);
 
-
 /**
  * Gets a promise to return an access token.
  * @param {string} refreshToken The refresh token.
@@ -161,13 +160,41 @@ function refreshExtractionData(extraction) {
       var arrivalTime = new Date(extraction.chunk_arrival_time);
       if(arrivalTime < new Date(Date.now())) {
         console.log(`Updating extraction ${extraction}`)
-       // return DB.ExtractionAdd(extraction);
+        return DB.ExtractionAdd(extraction);
       }
     });
 }
 
-function refreshExtractionsData(extractions) {
-  return Promise.map(extractions, extraction => refreshExtractionData(extraction).then(x => DB.ExtractionGet(extraction)));
+function getObserverExtractions(observer, extractions) {
+  let extractionIndex = extractions.map(extraction => extraction.structure_id).indexOf(observer.observer_id);
+
+  if(extractionIndex < 0) // no current extraction
+    return DB.ExtractionGet({structure_id: observer.observer_id});
+  else // get and refresh current extraction
+    return refreshExtractionData(extractions[extractionIndex])
+      .then(x => DB.ExtractionGet(extractions[extractionIndex]));
+}
+
+function refreshExtractionsData(getAccessToken, getObservers, getExtractions) {
+  return Promise.join(getAccessToken, getObservers, getExtractions, (accessToken, observers, extractions) => {
+    return Promise.map(observers, observer => getObserverExtractions(observer, extractions))
+  });
+  
+ // return Promise.map(extractions, extraction => refreshExtractionData(extraction).then(x => DB.ExtractionGet(extraction)));
+}
+
+function differenceInDays(d0, d1) {
+  // Copy dates so don't affect originals
+  d0 = new Date(+d0);
+  d1 = new Date(+d1);
+
+  // Set to noon
+  d0.setHours(12,0,0,0);
+  d1.setHours(12,0,0,0);
+
+  // Get difference in whole days, divide by milliseconds in one day
+  // and round to remove any daylight saving boundary effects
+  return Math.round((d1-d0) / 8.64e7)
 }
 
 /**
@@ -182,17 +209,19 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
     (observers, observed, uniqueVolumes, observerStructures, extractionsInProgress) => {
 
     var extractionData = [];
+    
     extractionsInProgress.forEach((extraction, index) => {
-      //var miningStart = new Date(extraction.chunk_arrival_time);
-      //var miningEnd = new Date(extraction.natural_decay_time);
-    var miningStart = new Date(extraction.chunk_arrival_time);
-    var miningEnd = miningStart.setDate(miningStart.getDate() + 3); //mining lasts 3 days
+      
+      var miningStart = new Date(extraction.chunk_arrival_time);
+      var miningEnd = new Date(extraction.chunk_arrival_time);
+      miningEnd = miningEnd.setDate(miningEnd.getDate() + 3); //mining lasts 3 days
 
       var observerIndex = observers.map(observer => observer.observer_id).indexOf(extraction.structure_id);
 
       var observedDuringExtraction = observed[observerIndex].filter(record => {
-        var recordDate = new Date(record.last_updated);
-        return (recordDate < miningEnd && recordDate > miningStart);
+        let recordDate = new Date(record.last_updated);
+
+        return (differenceInDays(recordDate, miningStart) <= 3 && differenceInDays(recordDate, miningStart) <= 3);
       });
 
       var staticOres = Config.moons.find(moon => {
@@ -237,7 +266,10 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
         var type = uniqueVolumes.find(x => x.name === name);
         var volume = type.volume;
         var typeId = type.type_id;
-        var mined = moon.extracted.filter(x => x.type_id == typeId)
+        var matchingTypes = Config.ores.find(x => x.ore === type.name);
+
+        //var mined = moon.extracted.filter(x => x.type_id == typeId)
+        var mined = moon.extracted.filter(x => matchingTypes.types.some(y => x.type_id == y))
           .reduce((accu, curr) => {
             return Math.round(accu + (volume * curr.quantity));
           }, 0);
@@ -284,7 +316,8 @@ function getChunksMined(){
   let getObserved = getObservedPromise(getAccessToken, getObservers);
   let getUniqueVolumes = getUniqueVolumesPromise(getAccessToken, getObserved);
   let getObserverStructures = getObserverStructuresPromise(getAccessToken, getObservers);
-  let getLatestExtractions = getExtractions.then(refreshExtractionsData);
+  let getLatestExtractions = refreshExtractionsData(getAccessToken, getObservers, getExtractions);
+  //let getLatestExtractions = getExtractions.then(refreshExtractionsData);
 
   return getChunksMinedPromise(getObservers, getObserved, getUniqueVolumes, getObserverStructures, getLatestExtractions);
 }

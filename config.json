@@ -4,6 +4,30 @@
   "prefix": "!",
   "corporation_id": 1091440439,
   "bot_admin_role": "Mod",
+  "ores":
+  [ 
+    { "ore": "Flawless Arkonor", "types": [ 46678, 46691 ] },
+    { "ore": "Sperrylite", "types": [ 45499, 46298, 46299 ] },
+    { "ore": "Xenotime", "types": [ 46312, 46313, 45510 ] },
+    { "ore": "Monazite", "types": [ 46315, 46314, 45511 ] },
+    { "ore": "Platinoid Omber", "types": [ 46684, 46700 ] },
+    { "ore": "Stable Veldspar", "types": [ 46689, 46705 ] },
+    { "ore": "Ytterbite", "types": [ 45513, 46318, 46319 ] },
+    { "ore": "Glossy Scordite", "types": [ 46687, 46703 ] },
+    { "ore": "Opulent Pyroxeres", "types": [ 46702, 46686 ] },
+    { "ore": "Pellucid Crokite", "types": [ 46677, 46693 ] },
+    { "ore": "Cinnabar", "types": [ 46311, 46310, 45506 ] },
+    { "ore": "Immaculate Jaspet", "types": [ 46682, 46698 ] },
+    { "ore": "Sparkling Plagioclase", "types": [ 46685, 46701 ] },
+    { "ore": "Vanadinite", "types": [ 45500, 46300, 46301 ] },
+    { "ore": "Brilliant Gneiss", "types": [ 46679, 46695 ] },
+    { "ore": "Lustrous Hedbergite", "types": [ 46680, 46696 ] },
+    { "ore": "Dazzling Spodumain", "types": [ 46688, 46704 ] },
+    { "ore": "Otavite", "types": [ 46296, 45498, 46297 ] },
+    { "ore": "Scintillating Hemorphite", "types": [ 46697, 46681 ] },
+    { "ore": "Bitumens", "types": [ 46284, 45492, 46285 ] },
+    { "ore": "Chromite", "types": [ 45501, 46302, 46303 ] } 
+  ],
   "moons":[
     {
       "name":"HHQ-M1 VIII - Moon 1",
