@@ -41,7 +41,7 @@ Client.on('message', msg => {
 
         return Promise.map(messages, message => msg.channel.send(`.\n${message}`));
       })
-      .catch(err => msg.channel.send(err));
+      .catch(err => msg.channel.send(`**Error**:\n${err}`));
   }
 
   if(command === "help") {
