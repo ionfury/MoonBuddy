@@ -43,7 +43,7 @@ Client.on('message', msg => {
 
         } while(x.length > 0) 
 
-        return Promise.all(promises);
+        return Promise.map(promises, promise => msg.channel.send(promise));
       })
       .catch(err => msg.channel.send(err));
   }
