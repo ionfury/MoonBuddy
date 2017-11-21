@@ -204,14 +204,14 @@ function differenceInDays(d0, d1) {
  * @param {*Promise} getUniqueVolumesPromise The unique volumes promise.
  * @param {*Promise} getObserverStructuresPromise The structures promise.
  */
-function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, extractionsPromise) {
-  return Promise.join(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, extractionsPromise, 
-    (observers, observed, uniqueVolumes, observerStructures, extractionsInProgress) => {
+function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise) {
+  return Promise.join(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise, 
+    (observers, observed, uniqueVolumes, observerStructures, extractions, extractionProgress) => {
 
     var extractionData = [];
     
-    extractionsInProgress.forEach((extraction, index) => {
-      
+    // compile data for each extraction
+    extractionProgress.forEach((extraction, index) => {
       var miningStart = new Date(extraction.chunk_arrival_time);
       var miningEnd = new Date(extraction.chunk_arrival_time);
       miningEnd = miningEnd.setDate(miningEnd.getDate() + 3); //mining lasts 3 days
@@ -236,18 +236,22 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
         chunk_arrival_time: extraction.chunk_arrival_time,
         natural_decay_time: extraction.natural_decay_time, 
         extracted: observedDuringExtraction,
-        ores: staticOres
+        ores: staticOres,
+        nextChunkArrivalTime: extractions.find(next => next.structure_id == extraction.structure_id).chunk_arrival_time
       });
     });
 
+    // sort data by x
     extractionData.sort((x, y) => {
       return Date.parse(x.natural_decay_time) > Date.parse(y.natural_decay_time);
     });
 
-    var outputInfo = extractionData.map(moon => {
+
+    return extractionData.map(moon => {
       var extractionStartTime = Date.parse(moon.extraction_start_time);
       var chunkArrivalTime = Date.parse(moon.chunk_arrival_time);
       var naturalDecayTime = Date.parse(moon.natural_decay_time);
+      var nextChunkArrivalTime = Date.parse(moon.nextChunkArrivalTime);
       var x = new Date(moon.chunk_arrival_time);
       var miningEnd = x.setDate(x.getDate() + 3); //mining lasts 3 days
 
@@ -278,19 +282,43 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       });
       
       var oreBreakdownString = mineableByType.map(x => {
-        return `\t${x.ore}: ${x.mined}/${x.mineable} m3 (${Math.round(x.mined/x.mineable*100,2)}%)`;
+        return `\t${x.ore}: ${pretty(x.mined)}/${pretty(x.mineable)} m3 (${Math.round(x.mined/x.mineable*100,2)}%)`;
       }).join('\n');
 
       var now = new Date();
       var remaining = Math.round((x - now)/60000/60);
+      var arrival = dateFormat(nextChunkArrivalTime, "mm-dd h:MM");
+      var now = new Date();
+      var until = Math.round((nextChunkArrivalTime - now)/60000/60);
 
-      var expired = miningEnd < new Date(Date.now()) ? '(EXPIRED)' : `(${remaining}h remain)`;
+      let expireTimeString = (new Date(miningEnd) < now && new Date(chunkArrivalTime) > now) ? `**${remaining}**h remains` : `**EXPIRED**`;
+      let minedString = `**${pretty(extractedVolume)}**/**${pretty(mineableVolume)}** m3`;
+      let percentString = `**${Math.round(extractedVolume/mineableVolume*100,2)}**%`;
+      let nextTimeString = `${arrival} (**${until}** h)`;
 
-      return output = '```'+`${moon.name} ${expired}: ${extractedVolume}/${mineableVolume} m3 (${Math.round(extractedVolume/mineableVolume*100,2)}%)\n${oreBreakdownString}`+'```';
+      return `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
     });
-
-    return outputInfo.join('\n');
   });
+}
+
+function pretty(number) {
+  let length = Math.round(number).toString().length;
+  let pretty = ``;
+
+  if(length <= 3)
+    pretty = number.toString();
+  else if(4 <= length && length <= 6)
+    pretty = `${Math.round(number/1000 * 10) / 10}k`; //thousands
+  else if(7 <= length && length <= 9)
+    pretty = `${Math.round(number/1000000 * 10) / 10}m`; //millions
+  else if(10 <= length && length <= 12)
+    pretty = `${Math.round(number/1000000000 * 10) / 10}b`; //billions
+  else if(11 <= length && length <= 15)
+    pretty = `${Math.round(number/1000000000000 * 10) / 10}t`; //trillions
+  else
+    pretty = `lol`;
+
+  return pretty;
 }
 
 /**
@@ -319,7 +347,7 @@ function getChunksMined(){
   let getLatestExtractions = refreshExtractionsData(getAccessToken, getObservers, getExtractions);
   //let getLatestExtractions = getExtractions.then(refreshExtractionsData);
 
-  return getChunksMinedPromise(getObservers, getObserved, getUniqueVolumes, getObserverStructures, getLatestExtractions);
+  return getChunksMinedPromise(getObservers, getObserved, getUniqueVolumes, getObserverStructures, getExtractions, getLatestExtractions);
 }
 
 module.exports = {
