@@ -247,7 +247,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
     });
 
 
-    return extractionData.map(moon => {
+    var mined = extractionData.map(moon => {
       var extractionStartTime = Date.parse(moon.extraction_start_time);
       var chunkArrivalTime = Date.parse(moon.chunk_arrival_time);
       var naturalDecayTime = Date.parse(moon.natural_decay_time);
@@ -298,6 +298,8 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
 
       return `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
     });
+
+    return mined.join('\n');
   });
 }
 
