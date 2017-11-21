@@ -1,4 +1,5 @@
 let Discord = require(`discord.js`);
+let Promise = require('bluebird');
 let Client = new Discord.Client();
 let Moons = require(`./src/Moons.js`);
 let Config = require(`./config.json`);
