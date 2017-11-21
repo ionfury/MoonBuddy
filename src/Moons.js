@@ -299,7 +299,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       return `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
     });
 
-    return mined.join('\n');
+    return mined;
   });
 }
 

@@ -30,7 +30,20 @@ Client.on('message', msg => {
   if(command === "mined") {
     Moons.GetChunksMined()
       .then(x => {
-        msg.channel.send(x);
+        let messages = [];
+        let promises = [];
+        do
+        {
+          messages.push(x.shift());
+
+          if(x.length % 3 == 0) {
+            promises.push(messages);
+            messages = [];
+          }
+
+        } while(x.length > 0) 
+
+        return Promise.all(promises);
       })
       .catch(err => msg.channel.send(err));
   }
