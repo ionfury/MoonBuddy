@@ -39,9 +39,8 @@ Client.on('message', msg => {
           console.log(messages);
           i = i + 3;
         } while(i < x.length) 
-        console.log(messages)
 
-        return Promise.map(messages, message => msg.channel.send(message));
+        return Promise.map(messages, message => msg.channel.send(message.join(',')));
       })
       .catch(err => msg.channel.send(err));
   }
