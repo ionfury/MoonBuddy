@@ -31,16 +31,17 @@ Client.on('message', msg => {
     Moons.GetChunksMined()
       .then(x => {
         let messages = [];
-        let promises = [];
         let i = 0;
 
         do
         {
-          promises.push(x.slice(i, i+3));
+          messages.push(x.slice(i, i+3));
+          console.log(messages);
           i = i + 3;
         } while(i < x.length) 
+        console.log(messages)
 
-        return Promise.map(promises, promise => msg.channel.send(promise));
+        return Promise.map(messages, message => msg.channel.send(message));
       })
       .catch(err => msg.channel.send(err));
   }
