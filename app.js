@@ -32,16 +32,13 @@ Client.on('message', msg => {
       .then(x => {
         let messages = [];
         let promises = [];
+        let i = 0;
+
         do
         {
-          messages.push(x.shift());
-
-          if(x.length % 3 == 0) {
-            promises.push(messages);
-            messages = [];
-          }
-
-        } while(x.length > 0) 
+          promises.push(x.slice(i, i+3));
+          i = i + 3;
+        } while(i < x.length) 
 
         return Promise.map(promises, promise => msg.channel.send(promise));
       })
