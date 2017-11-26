@@ -4,6 +4,8 @@ let Client = new Discord.Client();
 let Moons = require(`./src/Moons.js`);
 let Config = require(`./config.json`);
 
+const MESSAGE_BATCH_SIZE = 3;
+
 Client.on('ready', () => {
   console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
 });
@@ -22,32 +24,44 @@ Client.on('message', msg => {
 
   if(command === "moons") {
     Moons.GetMoonStatusText()
-      .then(x => {
-        msg.channel.send(x)
-      })
+      .then(message => send(message, msg.channel.send))
       .catch(err => msg.channel.send(err));
   }
 
   if(command === "mined") {
     Moons.GetChunksMined()
-      .then(x => {
-        let messages = [];
-        let i = 0;
-
-        do
-        {
-          messages.push(msg.channel.send(x.slice(i, i+3)));
-          i = i + 3;
-        } while(i < x.length) 
-
-        return Promise.all(messages);
-      })
+      .then(message => send(message, msg.channel.send))
       .catch(err => msg.channel.send(`**Error**:\n${err}`));
   }
 
+  if(command === "active") {
+    Moons.GetActive()
+  }
+
   if(command === "help") {
-    msg.channel.send(`Try ${Config.prefix}moons (moon extraction timers) or ${Config.prefix}mined (moon mining in the last 5 days).`)
+    msg.channel.send(`'''` + `${Config.prefix}moons\n${Config.prefix}mined` + `'''`)
   }
 });
 
 Client.login(process.env.token);
+
+function Write(func, route) {
+  func.then(message => send(message, route))
+      .catch(err => route(`**Error**:\n${err}`));
+}
+
+function send(message, sender) {
+  if(Array.isArray(message)) {
+    let messages = [];
+    let i = 0;
+
+    do {
+      messages.push(sender(message.slice(i, i+MESSAGE_BATCH_SIZE)));
+      i = i + MESSAGE_BATCH_SIZE;
+    } while(i < message.length);
+
+    return Promise.all(messages);
+  } else {
+    return sender(message);
+  }
+}

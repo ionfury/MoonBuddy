@@ -4,6 +4,8 @@ let Api = require(`./Api.js`);
 let dateFormat = require('dateformat');
 let DB = require(`./db.js`);
 
+const MINING_DURATION_DAYS = 3;
+
 /**
  * Gets a promise to return an access token.
  * @param {string} refreshToken The refresh token.
@@ -204,7 +206,7 @@ function differenceInDays(d0, d1) {
  * @param {*Promise} getUniqueVolumesPromise The unique volumes promise.
  * @param {*Promise} getObserverStructuresPromise The structures promise.
  */
-function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise) {
+function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise, active = 'all') {
   return Promise.join(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise, 
     (observers, observed, uniqueVolumes, observerStructures, extractions, extractionProgress) => {
 
@@ -214,14 +216,14 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
     extractionProgress.forEach((extraction, index) => {
       var miningStart = new Date(extraction.chunk_arrival_time);
       var miningEnd = new Date(extraction.chunk_arrival_time);
-      miningEnd = miningEnd.setDate(miningEnd.getDate() + 3); //mining lasts 3 days
+      miningEnd = miningEnd.setDate(miningEnd.getDate() + MINING_DURATION_DAYS);
 
       var observerIndex = observers.map(observer => observer.observer_id).indexOf(extraction.structure_id);
 
       var observedDuringExtraction = observed[observerIndex].filter(record => {
         let recordDate = new Date(record.last_updated);
 
-        return (differenceInDays(recordDate, miningStart) <= 3 && differenceInDays(recordDate, miningStart) <= 3);
+        return (differenceInDays(recordDate, miningStart) <= MINING_DURATION_DAYS && differenceInDays(recordDate, miningStart) <= MINING_DURATION_DAYS);
       });
 
       var staticOres = Config.moons.find(moon => {
@@ -242,10 +244,32 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
     });
 
     // sort data by x
+    switch(active) {
+      case 'active':
+        extractionData = extractionData.filter(data => {
+          let now = new Date();
+          let chunkArrivalTime = Date.parse(data.chunk_arrival_time);
+          let x = new Date(data.chunk_arrival_time);
+          let miningEnd = x.setDate(x.getDate() + MINING_DURATION_DAYS); 
+          return  (new Date(miningEnd) < now && new Date(chunkArrivalTime) > now);
+        });
+        break;
+      case 'inactive':
+        extractionData = extractionData.filter(data => {
+          let now = new Date();
+          let chunkArrivalTime = Date.parse(data.chunk_arrival_time);
+          let x = new Date(data.chunk_arrival_time);
+          let miningEnd = x.setDate(x.getDate() + MINING_DURATION_DAYS); 
+          return  !(new Date(miningEnd) < now && new Date(chunkArrivalTime) > now);
+        });
+        break;
+      default:
+        break;
+    }
+
     extractionData.sort((x, y) => {
       return Date.parse(x.natural_decay_time) > Date.parse(y.natural_decay_time);
     });
-
 
     var mined = extractionData.map(moon => {
       var extractionStartTime = Date.parse(moon.extraction_start_time);
@@ -253,7 +277,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       var naturalDecayTime = Date.parse(moon.natural_decay_time);
       var nextChunkArrivalTime = Date.parse(moon.nextChunkArrivalTime);
       var x = new Date(moon.chunk_arrival_time);
-      var miningEnd = x.setDate(x.getDate() + 3); //mining lasts 3 days
+      var miningEnd = x.setDate(x.getDate() + MINING_DURATION_DAYS); //mining lasts 3 days
 
       var mineableVolume = Math.round((chunkArrivalTime - extractionStartTime)/60000/60*20000);
 
@@ -288,7 +312,6 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       var now = new Date();
       var remaining = Math.round((x - now)/60000/60);
       var arrival = dateFormat(nextChunkArrivalTime, "mm-dd h:MM");
-      var now = new Date();
       var until = Math.round((nextChunkArrivalTime - now)/60000/60);
 
       let expireTimeString = (new Date(miningEnd) < now && new Date(chunkArrivalTime) > now) ? `**${remaining}**h remains` : `**EXPIRED**`;
@@ -298,8 +321,6 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
 
       return `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
     });
-
-    return mined;
   });
 }
 
@@ -352,7 +373,14 @@ function getChunksMined(){
   return getChunksMinedPromise(getObservers, getObserved, getUniqueVolumes, getObserverStructures, getExtractions, getLatestExtractions);
 }
 
+function getActiveMoons() {
+  let getAccessToken = getAccessTokenPromise(process.env.refresh_token);
+}
+
 module.exports = {
   GetMoonStatusText:getMoonStatusText,
-  GetChunksMined:getChunksMined
+  GetChunksMined:getChunksMined,
+  GetActive:getActiveMoons,
+  GetMoonHistory:getMoonHistory,
+  GetCharHistory:getCharHistory
 }
