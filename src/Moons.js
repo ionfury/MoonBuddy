@@ -314,7 +314,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       var arrival = dateFormat(nextChunkArrivalTime, "mm-dd h:MM");
       var until = Math.round((nextChunkArrivalTime - now)/60000/60);
 
-      let expireTimeString = (new Date(miningEnd) < now && new Date(chunkArrivalTime) > now) ? `**${remaining}**h remains` : `**EXPIRED**`;
+      let expireTimeString = (new Date(miningEnd) > now && new Date(chunkArrivalTime) < now) ? `**${remaining}**h remains` : `**EXPIRED**`;
       let minedString = `**${pretty(extractedVolume)}**/**${pretty(mineableVolume)}** m3`;
       let percentString = `**${Math.round(extractedVolume/mineableVolume*100,2)}**%`;
       let nextTimeString = `${arrival} (**${until}** h)`;

@@ -53,7 +53,7 @@ function extractionGetLatest(extraction) {
     
     return conn.collection('extractions')
       .find(query)
-      .sort({"chunk_arrival_time": 1 })
+      .sort({"chunk_arrival_time": -1 })
       .limit(1)
       .toArray()
   }).then(x => x[0]);
