@@ -204,7 +204,7 @@ function differenceInDays(d0, d1) {
  * @param {*Promise} getUniqueVolumesPromise The unique volumes promise.
  * @param {*Promise} getObserverStructuresPromise The structures promise.
  */
-function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise) {
+function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise, activeOnly = 0) {
   return Promise.join(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise, 
     (observers, observed, uniqueVolumes, observerStructures, extractions, extractionProgress) => {
 
@@ -246,6 +246,16 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       return Date.parse(x.natural_decay_time) > Date.parse(y.natural_decay_time);
     });
 
+    //filter actives if needed
+    if(activeOnly == 1) {
+      extractionData = extractionData.filter(moon => {
+        var chunkArrivalTime = Date.parse(moon.chunk_arrival_time);
+        var x = new Date(moon.chunk_arrival_time);
+        var miningEnd = x.setDate(x.getDate() + 3); //mining lasts 3 days
+        var now = new Date();
+        return (new Date(miningEnd) > now && new Date(chunkArrivalTime) < now) 
+      });
+    }
 
     var mined = extractionData.map(moon => {
       var extractionStartTime = Date.parse(moon.extraction_start_time);
@@ -352,7 +362,21 @@ function getChunksMined(){
   return getChunksMinedPromise(getObservers, getObserved, getUniqueVolumes, getObserverStructures, getExtractions, getLatestExtractions);
 }
 
+function getActiveMoons() {
+  let getAccessToken = getAccessTokenPromise(process.env.refresh_token);
+  let getObservers = getAccessToken.then(getObserversPromise);
+  let getExtractions = getAccessToken.then(getExtractionPromise);
+  let getObserved = getObservedPromise(getAccessToken, getObservers);
+  let getUniqueVolumes = getUniqueVolumesPromise(getAccessToken, getObserved);
+  let getObserverStructures = getObserverStructuresPromise(getAccessToken, getObservers);
+  let getLatestExtractions = refreshExtractionsData(getAccessToken, getObservers, getExtractions);
+  //let getLatestExtractions = getExtractions.then(refreshExtractionsData);
+
+  return getChunksMinedPromise(getObservers, getObserved, getUniqueVolumes, getObserverStructures, getExtractions, getLatestExtractions, 1);
+}
+
 module.exports = {
   GetMoonStatusText:getMoonStatusText,
-  GetChunksMined:getChunksMined
+  GetChunksMined:getChunksMined,
+  GetActiveMoons:getActiveMoons
 }

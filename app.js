@@ -20,6 +20,14 @@ Client.on('message', msg => {
   var command = args.shift().toLowerCase();
   console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
+  if(command === "active") {
+    Moons.GetActiveMoons()
+      .then(x => {
+        msg.channel.send(x)
+      })
+      .catch(err => msg.channel.send(err));
+  }
+
   if(command === "moons") {
     Moons.GetMoonStatusText()
       .then(x => {
@@ -46,7 +54,7 @@ Client.on('message', msg => {
   }
 
   if(command === "help") {
-    msg.channel.send(`Try ${Config.prefix}moons (moon extraction timers) or ${Config.prefix}mined (moon mining in the last 5 days).`)
+    msg.channel.send(`Try ${Config.prefix}moons (moon extraction timers) or ${Config.prefix}mined (moon mining breakdown). or ${Config.prefix}active (Currently minable moons)`)
   }
 });
 

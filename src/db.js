@@ -3,6 +3,7 @@ let Promise = require('bluebird');
 let Config = require(`./../config.json`);
 Promise.promisifyAll(MongoClient);
 
+
 const connectionUrl = `mongodb://${process.env.database_username}:${process.env.database_password}@${process.env.database_connection_string}`;
 
 module.exports = {
