@@ -228,6 +228,12 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
         return moon.id == extraction.moon_id;
       }).ores;
 
+      let nextArrival = extractions.find(next => next.structure_id == extraction.structure_id);
+      let nextArrivalTime = "";
+
+      if(!nextArrival)
+        nextArrivalTime = nextArrival.chunk_arrival_time;
+
       extractionData.push({
         moon_id: extraction.moon_id,
         structure_id: extraction.structure_id,
@@ -237,7 +243,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
         natural_decay_time: extraction.natural_decay_time, 
         extracted: observedDuringExtraction,
         ores: staticOres,
-        nextChunkArrivalTime: new Date()//extractions.find(next => next.structure_id == extraction.structure_id).chunk_arrival_time
+        nextChunkArrivalTime: nextArrivalTime
       });
     });
 
@@ -261,6 +267,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       var extractionStartTime = Date.parse(moon.extraction_start_time);
       var chunkArrivalTime = Date.parse(moon.chunk_arrival_time);
       var naturalDecayTime = Date.parse(moon.natural_decay_time);
+      let isExtracting = moon.nextChunkArrivalTime == "" ? false:true;
       var nextChunkArrivalTime = Date.parse(moon.nextChunkArrivalTime);
       var x = new Date(moon.chunk_arrival_time);
       var miningEnd = x.setDate(x.getDate() + 3); //mining lasts 3 days
@@ -304,7 +311,10 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       let expireTimeString = (new Date(miningEnd) > now && new Date(chunkArrivalTime) < now) ? `**${remaining}**h remains` : `**EXPIRED**`;
       let minedString = `**${pretty(extractedVolume)}**/**${pretty(mineableVolume)}** m3`;
       let percentString = `**${Math.round(extractedVolume/mineableVolume*100,2)}**%`;
-      let nextTimeString = `${arrival} (**${until}** h)`;
+      let nextTimeString = `(**NO EXTRACTION**)`;
+      
+      if(isExtracting)
+        nextTimeString = `${arrival} (**${until}** h)`;
 
       return `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
     });
