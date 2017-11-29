@@ -231,7 +231,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       let nextArrival = extractions.find(next => next.structure_id == extraction.structure_id);
       let nextArrivalTime = "";
 
-      if(!nextArrival)
+      if(nextArrival)
         nextArrivalTime = nextArrival.chunk_arrival_time;
 
       extractionData.push({
