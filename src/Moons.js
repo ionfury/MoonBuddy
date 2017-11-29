@@ -237,7 +237,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
         natural_decay_time: extraction.natural_decay_time, 
         extracted: observedDuringExtraction,
         ores: staticOres,
-        nextChunkArrivalTime: extractions.find(next => next.structure_id == extraction.structure_id).chunk_arrival_time
+        nextChunkArrivalTime: new Date()//extractions.find(next => next.structure_id == extraction.structure_id).chunk_arrival_time
       });
     });
 
