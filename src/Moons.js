@@ -281,7 +281,12 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
 
       var extractedVolume = moon.extracted.reduce((accu, curr) => {
         var item = uniqueVolumes.find(x => x.type_id === curr.type_id)
-        return Math.round(accu + (item.volume * curr.quantity));
+        if(item)
+          return Math.round(accu + (item.volume * curr.quantity));
+        else {
+          console.log(`no item found for typeid ${curr.type_id}`)
+          return 0;
+        }
       }, 0);
 
       var mineableByType = [];
