@@ -292,21 +292,24 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       var mineableByType = [];
       
       moon.ores.forEach(type => {
-        var name = type.ore;
-        var mineable = Math.round(type.amount*mineableVolume);
-        var type = uniqueVolumes.find(x => x.name === name);
-        console.log(name);
-        var volume = type.volume;
-        var typeId = type.type_id;
-        var matchingTypes = Config.ores.find(x => x.ore === type.name);
+        try {
+          var name = type.ore;
+          var mineable = Math.round(type.amount*mineableVolume);
+          var type = uniqueVolumes.find(x => x.name === name);
+          var volume = type.volume;
+          var typeId = type.type_id;
+          var matchingTypes = Config.ores.find(x => x.ore === type.name);
 
-        //var mined = moon.extracted.filter(x => x.type_id == typeId)
-        var mined = moon.extracted.filter(x => matchingTypes.types.some(y => x.type_id == y))
-          .reduce((accu, curr) => {
-            return Math.round(accu + (volume * curr.quantity));
-          }, 0);
-         
-        mineableByType.push({ore:name, mineable:mineable, mined:mined})
+          //var mined = moon.extracted.filter(x => x.type_id == typeId)
+          var mined = moon.extracted.filter(x => matchingTypes.types.some(y => x.type_id == y))
+            .reduce((accu, curr) => {
+              return Math.round(accu + (volume * curr.quantity));
+            }, 0);
+          
+          mineableByType.push({ore:name, mineable:mineable, mined:mined})
+        } catch (e) {
+          console.log(e);
+        }
       });
       
       var oreBreakdownString = mineableByType.map(x => {
