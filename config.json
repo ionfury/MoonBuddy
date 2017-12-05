@@ -30,6 +30,15 @@
   ],
   "moons":[
     {
+      "name":"XKZ8-H I - Moon 1",
+      "id":40198036,
+      "ores":[
+        {"ore":"Cubic Bistot","amount":0.2912},
+        {"ore":"Flawless Arkonor","amount":0.1990},
+        {"ore":"Sylvite","amount":0.5097}
+      ]
+    },
+    {
       "name":"HHQ-M1 VIII - Moon 1",
       "id":40196917,
       "ores":[
