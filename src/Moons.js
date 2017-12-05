@@ -255,11 +255,16 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
     //filter actives if needed
     if(activeOnly == 1) {
       extractionData = extractionData.filter(moon => {
-        var chunkArrivalTime = Date.parse(moon.chunk_arrival_time);
-        var x = new Date(moon.chunk_arrival_time);
-        var miningEnd = x.setDate(x.getDate() + 3); //mining lasts 3 days
-        var now = new Date();
-        return (new Date(miningEnd) > now && new Date(chunkArrivalTime) < now) 
+        try {
+          var chunkArrivalTime = Date.parse(moon.chunk_arrival_time);
+          var x = new Date(moon.chunk_arrival_time);
+          var miningEnd = x.setDate(x.getDate() + 3); //mining lasts 3 days
+          var now = new Date();
+          return (new Date(miningEnd) > now && new Date(chunkArrivalTime) < now);
+        }
+        catch (e) {
+          return false;
+        }
       });
     }
 
