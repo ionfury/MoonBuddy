@@ -295,6 +295,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
         var name = type.ore;
         var mineable = Math.round(type.amount*mineableVolume);
         var type = uniqueVolumes.find(x => x.name === name);
+        console.log(uniqueVolumes);
         var volume = type.volume;
         var typeId = type.type_id;
         var matchingTypes = Config.ores.find(x => x.ore === type.name);
