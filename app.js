@@ -25,7 +25,10 @@ Client.on('message', msg => {
       .then(x => {
         msg.channel.send(x)
       })
-      .catch(err => msg.channel.send(err));
+      .catch(err => {
+        console.log(err);
+        msg.channel.send(`**Error**:\n${err}`);
+      });
   }
 
   if(command === "moons") {
@@ -33,7 +36,10 @@ Client.on('message', msg => {
       .then(x => {
         msg.channel.send(x)
       })
-      .catch(err => msg.channel.send(err));
+      .catch(err => {
+        console.log(err);
+        msg.channel.send(`**Error**:\n${err}`);
+      });
   }
 
   if(command === "mined") {
@@ -50,7 +56,10 @@ Client.on('message', msg => {
 
         return Promise.all(messages);
       })
-      .catch(err => msg.channel.send(`**Error**:\n${err}`));
+      .catch(err => {
+        console.log(err);
+        msg.channel.send(`**Error**:\n${err}`);
+      });
   }
 
   if(command === "help") {
