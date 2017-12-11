@@ -337,8 +337,11 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       if(!retStr || retStr === "")
         retStr = `${moon.name} has an issue`
 
-      return retStr;
+      return retStr || "a";
     });
+
+    if(!mined || mined === "")
+      mined = `this is broke`;
 
     return mined;
   });
