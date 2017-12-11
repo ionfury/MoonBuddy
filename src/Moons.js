@@ -325,15 +325,19 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       var now = new Date();
       var until = Math.round((nextChunkArrivalTime - now)/60000/60);
 
-      let expireTimeString = (new Date(miningEnd) > now && new Date(chunkArrivalTime) < now) ? `**${remaining || ""}**h remains` : `**EXPIRED**`;
-      let minedString = `**${pretty(extractedVolume) || ""}**/**${pretty(mineableVolume) || ""}** m3`;
-      let percentString = `**${Math.round(extractedVolume/mineableVolume*100,2) || ""}**%`;
+      let expireTimeString = (new Date(miningEnd) > now && new Date(chunkArrivalTime) < now) ? `**${remaining}**h remains` : `**EXPIRED**`;
+      let minedString = `**${pretty(extractedVolume)}**/**${pretty(mineableVolume)}** m3`;
+      let percentString = `**${Math.round(extractedVolume/mineableVolume*100,2)}**%`;
       let nextTimeString = `(**NO EXTRACTION**)`;
       
       if(isExtracting)
         nextTimeString = `${arrival} (**${until}** h)`;
 
-      return `${moon.name || ""}: ${expireTimeString || ""} - ${minedString || ""} (${percentString || ""} done) - next @${nextTimeString || ""}` + '```' + `\n${oreBreakdownString || ""}` + '```';
+      var retStr = `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
+      if(!retStr || retStr === "")
+        retStr = `${moon.name} has an issue`
+
+      return retStr;
     });
 
     return mined;
