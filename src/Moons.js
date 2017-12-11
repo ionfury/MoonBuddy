@@ -252,7 +252,10 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
 
     // sort data by x
     extractionData.sort((x, y) => {
-      return Date.parse(x.natural_decay_time) > Date.parse(y.natural_decay_time);
+      var z = Date.parse(x.natural_decay_time) > Date.parse(y.natural_decay_time);
+      if(!z)
+        z = false;
+      return z;
     });
 
     //filter actives if needed
@@ -333,15 +336,8 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       if(isExtracting)
         nextTimeString = `${arrival} (**${until}** h)`;
 
-      var retStr = `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
-      if(!retStr || retStr === "")
-        retStr = `${moon.name} has an issue`
-
-      return retStr || "a";
+      return `${moon.name}: ${expireTimeString} - ${minedString} (${percentString} done) - next @${nextTimeString}` + '```' + `\n${oreBreakdownString}` + '```';
     });
-
-    if(!mined || mined === "")
-      mined = `this is broke`;
 
     return mined;
   });
