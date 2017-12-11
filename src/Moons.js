@@ -212,7 +212,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
     
     // compile data for each extraction
     extractionProgress.forEach((extraction, index) => {
-      console.log(extraction);
+      if(!extraction) return;
       var miningStart = new Date(extraction.chunk_arrival_time);
       var miningEnd = new Date(extraction.chunk_arrival_time);
       miningEnd = miningEnd.setDate(miningEnd.getDate() + 3); //mining lasts 3 days
