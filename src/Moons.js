@@ -224,7 +224,7 @@ function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqu
       var observedDuringExtraction = observed[observerIndex].filter(record => {
         let recordDate = new Date(record.last_updated);
 
-        return (differenceInDays(recordDate, miningStart) <= 3 && differenceInDays(recordDate, miningStart) <= 3);
+        return (differenceInDays(recordDate, miningStart) <= 2 && differenceInDays(recordDate, miningStart) <= 2);
       });
 
       var staticOres = Config.moons.find(moon => {
