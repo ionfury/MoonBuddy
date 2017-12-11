@@ -207,12 +207,14 @@ function differenceInDays(d0, d1) {
 function getChunksMinedPromise(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise, activeOnly = 0) {
   return Promise.join(getObserversPromise, getObservedPromise, getUniqueVolumesPromise, getObserverStructuresPromise, currentExtractionPromise, storedExtractionPromise, 
     (observers, observed, uniqueVolumes, observerStructures, extractions, extractionProgress) => {
+    console.log(observers.length, observerStructures.length, extractions.length, extractionProgress.length);
 
     var extractionData = [];
     
     // compile data for each extraction
     extractionProgress.forEach((extraction, index) => {
       if(!extraction) return;
+
       var miningStart = new Date(extraction.chunk_arrival_time);
       var miningEnd = new Date(extraction.chunk_arrival_time);
       miningEnd = miningEnd.setDate(miningEnd.getDate() + 3); //mining lasts 3 days
