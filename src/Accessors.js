@@ -41,8 +41,6 @@ function getExtractionsPromise(accessToken) {
 function getExtractionStructuresPromise(accessTokenPromise, extractionsPromise) {
   return Promise.join(accessTokenPromise, extractionsPromise, (accessToken, extractions) => {
     var promises = [];
-
-    console.log(extractions);
     
     extractions.forEach(extractor => 
       promises.push(

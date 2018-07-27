@@ -5,12 +5,20 @@ let Client = new Discord.Client();
 let Moons = require(`./src/Moons2.js`);
 let Config = require(`./config.json`);
 let Utilities = require(`./src/Utilities.js`);
-
+let Schedule = require('cron-scheduler');
 
 
 const DISCORD_MESSAGE_LENGTH = 1800;
 
+function Announce()
+{
+  return Moons.Announce().then(moons => Client.channels.find("name", "the_succ").send(moons))
+}
+
 Client.on('ready', () => {
+  Schedule({ on: '* * */1 * *'}, function () {
+    return Announce();
+  });
   console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
 });
 
@@ -46,6 +54,10 @@ Client.on('message', msg => {
       .then(moons => msg.author.sendMessage(moons))
       .catch(err =>  msg.author.sendMessage(`:x: ${err}`));
       break;
+    case "announce":
+      Moons.Announce()
+        .then(moons => msg.channel.send(moons))
+        .catch(err =>  msg.author.sendMessage(`:x: ${err}`));
   }
 });
 

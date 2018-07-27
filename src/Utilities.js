@@ -5,16 +5,6 @@ module.exports = {
   SplitString:splitString
 }
 
-/*
-function splitString (string, size, multiline) {
-  var matchAllToken = (multiline == true) ? '[^]' : '.';
-  var re = new RegExp(matchAllToken + '{1,' + size + '}', 'g');
-  let x = string.match(re);
-  console.log(x);
-  //return string.match(re);
-  return x;
-}*/
-
 function splitString (string, size) {
   let splitStrings = new Array();
 
