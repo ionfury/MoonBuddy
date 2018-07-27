@@ -4,7 +4,6 @@ module.exports = {
   FormatNumberForDisplay:formatNumberForDisplay,
   SplitString:splitString
 }
-
 function splitString (string, size) {
   let splitStrings = new Array();
 

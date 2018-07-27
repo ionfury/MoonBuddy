@@ -7,7 +7,6 @@ let Config = require(`./config.json`);
 let Utilities = require(`./src/Utilities.js`);
 let Schedule = require('cron-scheduler');
 
-
 const DISCORD_MESSAGE_LENGTH = 1800;
 
 function Announce()
@@ -41,23 +40,30 @@ Client.on('message', msg => {
     case "owned":
       Moons.GetOwnedMoons(search)
         .then(moons => Utilities.SplitString(moons,DISCORD_MESSAGE_LENGTH))
-        .then(messages => messages.forEach(message => msg.author.sendMessage(`\`\`\`${message}\`\`\``)))
-        .catch(err => msg.author.sendMessage(`:x: ${err}`));
+        .then(messages => messages.forEach(message => msg.author.send(`\`\`\`${message}\`\`\``)))
+        .catch(err => msg.author.send(`:x: ${err}`));
       break;
     case "inactive":
       Moons.GetInactiveMoons()
-        .then(moons => msg.author.sendMessage(moons))
-        .catch(err =>  msg.author.sendMessage(`:x: ${err}`));
+        .then(moons => msg.author.send(moons))
+        .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "schedule":
       Moons.GetScheduledMoons(search)
-      .then(moons => msg.author.sendMessage(moons))
-      .catch(err =>  msg.author.sendMessage(`:x: ${err}`));
+      .then(moons => msg.author.send(moons))
+      .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "announce":
-      Moons.Announce()
-        .then(moons => msg.channel.send(moons))
-        .catch(err =>  msg.author.sendMessage(`:x: ${err}`));
+      if(!msg.member.roles.find("name","pinger")){
+        msg.author.send("DO YOU HAVE THE PINGER ROLE? I DONT THINK SO BUCKO");
+        return;
+      }
+      else {
+        console.log("Announcing!");
+        Moons.Announce()
+          .then(moons => msg.channel.send(moons))
+          .catch(err => msg.channel.send(`:x: ${err}`));
+      }
   }
 });
 
