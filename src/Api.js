@@ -1,7 +1,17 @@
 let RequestPromise = require('request-promise');
 let Promise = require('bluebird');
 let Config = require(`./../config.json`);
-
+var process = {
+  env: {
+    client_id:'20d390444f79404ea527fdb4297b14ac',
+    client_secret:'2OZcJZAkWUTqN6WqwQYTx69cygdgfqRdNk9egTKX',
+    database_password:'-c!4PP&4XxpzLx$k',
+    database_username:'alcoholocaust',
+    refresh_token:'fcnoTpeSqIixyHBokdy9iwW7FK0nZ9usQe-pmcJzbhJ9fk0Hrp86teRQtKuIbB-n0',
+    token:'Mzc3MjMyNDQ5MjU3NjAzMDcy.DOKC-g.NQMZc_cTu9vwt_5i-uAO1dP6ho0',
+    database_connection_string:'ds113606.mlab.com:13606/moons'
+  }
+};
 /**
  * Authroizes a token through ESI. 
  * @param {string} token The code.

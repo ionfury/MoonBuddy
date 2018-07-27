@@ -2,17 +2,20 @@
   "name": "moon-buddy",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.1",
+    "date-diff": "^0.2.0",
     "dateformat": "^3.0.2",
     "discord.js": "^11.2.1",
     "mongodb": "^2.2.33",
+    "node-text-chunk": "^0.1.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }
