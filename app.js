@@ -16,9 +16,9 @@ function Announce()
 }
 
 Client.on('ready', () => {
-  //Schedule({ on: '* * */1 * *'}, function () {
- //   return Announce();
-  //});
+  Schedule({ on: '0 0 */1 * *'}, function () {
+    return Announce();
+  });
   console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
 });
 
