@@ -5,6 +5,7 @@ module.exports = {
   SplitString:splitString
 }
 function splitString (string, size) {
+  console.log(string);
   let splitStrings = new Array();
 
   let newline = '\n';
