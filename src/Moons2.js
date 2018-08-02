@@ -177,7 +177,7 @@ function GetScheduledMoons(search)
       scheduleString = scheduleString.filter(string => re.test(string));
     }
 
-    return scheduleString;
+    return scheduleString.join('\n');;
   });
 }
 
