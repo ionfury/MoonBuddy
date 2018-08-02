@@ -50,9 +50,9 @@ Client.on('message', msg => {
       break;
     case "schedule":
       Moons.GetScheduledMoons(search)
-      .then(moons => Utilities.SplitString(moons,DISCORD_MESSAGE_LENGTH))
-      .then(messages => messages.forEach(message => msg.author.send(`\`\`\`${message}\`\`\``)))
-      .catch(err =>  msg.author.send(`:x: ${err}`));
+        .then(moons => Utilities.SplitString(moons,DISCORD_MESSAGE_LENGTH))
+        .then(messages => messages.forEach(message => msg.author.send(message)))
+        .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "announce":
       if(!msg.member.roles.find("name","pinger")){
