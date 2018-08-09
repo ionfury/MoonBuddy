@@ -55,7 +55,7 @@ Client.on('message', msg => {
         .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "prices":
-      Moons.getOwnedOrePrices()
+      Moons.GetOwnedOrePrices()
         .then(prices => Utilities.SplitString(prices,DISCORD_MESSAGE_LENGTH))
         .then(messages => messages.forEach(message => msg.author.send(message)))
         .catch(err =>  msg.author.send(`:x: ${err}`));
