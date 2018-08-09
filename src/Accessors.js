@@ -178,7 +178,7 @@ function getMarketHubInfo(system, item) {
   }
   let getItemID = getItemIDStrictPromise(item);
   let getTypeInfo = getItemID.then(getTypeInfoPromise);
-  let getFuzzworkMarketData = getItemID.then(itemID => Api.GetFuzzworkMarketDataPromise(stationID, itemID));
+  let getFuzzworkMarketData = getItemID.then(itemID => Api.GetFuzzworkMarketDataPromise(stationID, itemID).then(JSON.parse));
 
   return Promise.join(getTypeInfo, getFuzzworkMarketData, (typeInfo, marketData) => {
     return {
