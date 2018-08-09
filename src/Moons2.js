@@ -62,12 +62,18 @@ function Announce()
   });
 }
 
+function iskM3(price, vol) {
+  let p = Math.parseFloat(price);
+  let v = Math.parseFloat(vol);
+
+  return Math.round(p / v, 2);
+}
 
 function getOwnedOrePrices() {
   var allOwnedOres = Array.from(new Set(Config.moons.map(m => m.product)));
 
   return Promise.map(allOwnedOres, ore => Accessors.GetMarketHubInfo('jita', ore))
-    .then(ores => ores.map(ore => `${ore.name}: ${ore.buy / ore.volume} isk/m3`).join('\n'));
+    .then(ores => ores.map(ore => `${ore.name}: ${iskM3(ore.buy, ore.volume)} isk/m3`).join('\n'));
 }
 
 
