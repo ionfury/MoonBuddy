@@ -151,9 +151,8 @@ function GetScheduledMoons(search)
       return { "moonExtraction": moonExtraction, "moon": moon, "hrsRemaining": diff.hours() };
     });
 
-    moonData = moonData.sort((a, b) => a.hrsRemaining > b.hrsRemaining);
 
-    let scheduleString = moonData.map(data => {
+    let schedule = moonData.map(data => {
       let string = '';
       let ores = moonJson
         .filter(json => json.name === data.moon.name)
@@ -169,15 +168,17 @@ function GetScheduledMoons(search)
   
       string = `\`\`\`${string}\`\`\``;
   
-      return string;
+      return  { value: string, remaining: data.hrsRemaining };
     });
     
     if(search != '') {
       let re = new RegExp(search, 'i');
-      scheduleString = scheduleString.filter(string => re.test(string));
+      schedule = schedule.filter(string => re.test(string));
     }
+    
+    schedule = schedule.sort((a, b) => a.hrsRemaining > b.hrsRemaining);
 
-    return scheduleString.join('\n');;
+    return schedule.join('\n');;
   });
 }
 
