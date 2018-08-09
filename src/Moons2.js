@@ -73,7 +73,7 @@ function getOwnedOrePrices() {
   var allOwnedOres = Array.from(new Set(Config.moons.map(m => m.product)));
 
   return Promise.map(allOwnedOres, ore => Accessors.GetMarketHubInfo('jita', ore))
-    .then(ores => ores.map(ore => `${ore.name}: ${iskM3(ore.buy, ore.volume)} isk/m3`).join('\n'));
+    .then(ores => ores.map(ore => `${ore.name}: ${iskM3(ore.sell, ore.volume)} isk/m3`).join('\n'));
 }
 
 
