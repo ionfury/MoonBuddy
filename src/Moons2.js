@@ -63,8 +63,8 @@ function Announce()
 }
 
 function iskM3(price, vol) {
-  let p = Math.parseFloat(price);
-  let v = Math.parseFloat(vol);
+  let p = Number.parseFloat(price);
+  let v = Number.parseFloat(vol);
 
   return Math.round(p / v, 2);
 }
