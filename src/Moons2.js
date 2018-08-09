@@ -177,8 +177,8 @@ function GetScheduledMoons(search)
     }
     
     schedule.sort((a, b) => {
-      console.log(Number.parseFloat(a.hrsRemaining) - Number.parseFloat(b.hrsRemaining), Number.parseFloat(a.hrsRemaining), Number.parseFloat(b.hrsRemaining))
-      return (Number.parseFloat(a.hrsRemaining) - Number.parseFloat(b.hrsRemaining))
+      console.log(Number.parseFloat(a.remaining) - Number.parseFloat(b.remaining), Number.parseFloat(a.remaining), Number.parseFloat(b.remaining))
+      return (Number.parseFloat(a.remaining) - Number.parseFloat(b.remaining))
     });
 
     return schedule.map(m => m.value).join('\n');;
