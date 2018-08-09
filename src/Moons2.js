@@ -173,12 +173,12 @@ function GetScheduledMoons(search)
     
     if(search != '') {
       let re = new RegExp(search, 'i');
-      schedule = schedule.filter(string => re.test(string));
+      schedule = schedule.filter(string => re.test(string.value));
     }
     
     schedule = schedule.sort((a, b) => a.hrsRemaining > b.hrsRemaining);
 
-    return schedule.join('\n');;
+    return schedule.map(m => m.value).join('\n');;
   });
 }
 
