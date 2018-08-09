@@ -63,6 +63,10 @@ function Announce()
 }
 
 
+function getOwnedOrePrices() {
+  var allOwnedOres = Array.from(new Set(config.moons.map(m => m.product)));
+}
+
 
 var GetOwnedMoons = (search) =>{ 
   let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
@@ -176,10 +180,7 @@ function GetScheduledMoons(search)
       schedule = schedule.filter(string => re.test(string.value));
     }
     
-    schedule.sort((a, b) => {
-      console.log(Number.parseFloat(a.remaining) - Number.parseFloat(b.remaining), Number.parseFloat(a.remaining), Number.parseFloat(b.remaining))
-      return (Number.parseFloat(a.remaining) - Number.parseFloat(b.remaining))
-    });
+    schedule.sort((a, b) => (Number.parseFloat(a.remaining) - Number.parseFloat(b.remaining)));
 
     return schedule.map(m => m.value).join('\n');;
   });

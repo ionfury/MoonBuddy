@@ -114,3 +114,94 @@ function getObserverStructuresPromise(accessTokenPromise, observersPromise) {
     return Promise.all(promises);
   });
 }
+
+
+function getFuzzworkMarketDataPromise(stationID, typeID) {
+
+  var options = {
+    method: 'GET',
+    url: `https://market.fuzzwork.co.uk/aggregates/?station=${stationID}&types=${typeID}`
+  }
+
+  return RequestPromise(options).then(JSON.parse);
+}
+
+
+function getTypeInfoPromise(typeID) {
+  let options = {
+    route: `universe/types/${typeID}`
+  };
+
+  return Api.esiGet(options).then(JSON.parse);
+}
+
+
+function getItemIDStrictPromise(item) {
+  let options = {
+    route:'search',
+    parameters: `categories=inventory_type&search=${item}&strict=true`
+  }
+
+  return Api.esiGet(options)
+    .then(JSON.parse)
+    .then(res => {
+      if(!res.inventory_type) 
+        return getItemIDPromise(item);
+      else
+        return res.inventory_type.shift();
+    });
+}
+
+function getItemIDPromise(item) {
+  let options = {
+    route:'search',
+    parameters: `categories=inventory_type&search=${item}`
+  }
+
+  return Api.esiGet(options)
+    .then(JSON.parse)
+    .then(res => {
+      if(!res.inventory_type) 
+        throw new Error(`Inventorytype not found for '${item}'!`);
+      else
+        return res.inventory_type.shift();
+    });
+}
+
+
+function getMarketHubInfo(system, item) {
+  var stationID = 0;
+  switch(system) {
+    case 'jita':
+      stationID = 60003760;
+      break;
+    case 'amarr':
+      stationID = 60008494;
+      break;
+    case 'dodixie':
+      stationID = 60011866;
+      break;
+    case 'rens':
+      stationID = 60004588;
+      break;
+    case 'hek':
+      stationID = 60005686;
+      break;
+  }
+  let getItemID = getItemIDStrictPromise(item);
+  let getTypeInfo = getItemID.then(getTypeInfoPromise);
+  let getFuzzworkMarketData = getItemID.then(itemID => getFuzzworkMarketDataPromise(stationID, itemID));
+
+  return Promise.join(getTypeInfo, getFuzzworkMarketData, (typeInfo, marketData) => {
+    return formatInfo(
+      system,
+      typeInfo.name,
+      typeInfo.type_id,
+      typeInfo.volume,
+      typeInfo.packaged_volume,
+      marketData[typeInfo.type_id].buy.max,
+      marketData[typeInfo.type_id].buy.volume,
+      marketData[typeInfo.type_id].sell.min,
+      marketData[typeInfo.type_id].sell.volume);
+  });
+}
