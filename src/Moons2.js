@@ -178,7 +178,7 @@ function GetScheduledMoons(search)
     
     schedule.sort((a, b) => (a.hrsRemaining - b.hrsRemaining));
 
-    return scheduleString.map(m => m.value).join('\n');;
+    return schedule.map(m => m.value).join('\n');;
   });
 }
 
