@@ -133,7 +133,7 @@ function getTypeInfoPromise(typeID) {
     route: `universe/types/${typeID}`
   };
 
-  return Api.esiGet(options).then(JSON.parse);
+  return Api.EsiGet(options).then(JSON.parse);
 }
 
 
@@ -143,7 +143,7 @@ function getItemIDStrictPromise(item) {
     parameters: `categories=inventory_type&search=${item}&strict=true`
   }
 
-  return Api.esiGet(options)
+  return Api.EsiGet(options)
     .then(JSON.parse)
     .then(res => {
       if(!res.inventory_type) 
@@ -159,7 +159,7 @@ function getItemIDPromise(item) {
     parameters: `categories=inventory_type&search=${item}`
   }
 
-  return Api.esiGet(options)
+  return Api.EsiGet(options)
     .then(JSON.parse)
     .then(res => {
       if(!res.inventory_type) 
