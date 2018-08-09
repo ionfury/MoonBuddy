@@ -65,6 +65,7 @@ function Announce()
 
 function getOwnedOrePrices() {
   var allOwnedOres = Array.from(new Set(config.moons.map(m => m.product)));
+  return allOwnedOres.join('\n')
 }
 
 
@@ -192,5 +193,6 @@ module.exports = {
   GetScheduledMoons:GetScheduledMoons,
   GetInactiveMoons:GetInactiveMoons,
   Announce:Announce,
+  GetOwnedOrePrices:getOwnedOrePrices,
   Test:Test
 };
