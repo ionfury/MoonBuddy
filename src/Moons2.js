@@ -66,7 +66,7 @@ function iskM3(price, vol) {
   let p = Number.parseFloat(price);
   let v = Number.parseFloat(vol);
 
-  return Math.round(p / v, 2);
+  return Math.round(p / v * 100) / 100;
 }
 
 function getOwnedOrePrices() {
