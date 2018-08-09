@@ -70,11 +70,10 @@ function iskM3(price, vol) {
 }
 
 function getOwnedOrePrices() {
-  var allOwnedOres = Array.from(new Set(Config.moons.map(m => m.product)));
-  let materialPricePromise = Promise.map(Config.materials, material => Accessors.GetMarketHubInfo('jita', material));
+  //let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
 
-  return materialPricePromise
-    .then(ores => ores.map(ore => `${ore.name}: ${iskM3(ore.sell, ore.volume)} isk/m3`).join('\n'));
+  return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
+    .then(prices => prices.map(price => `${price.name}: ${iskM3(price.sell, price.volume)} isk/m3`).join('\n'));
 }
 
 
