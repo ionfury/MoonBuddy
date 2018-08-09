@@ -65,7 +65,10 @@ function Announce()
 
 function getOwnedOrePrices() {
   var allOwnedOres = Array.from(new Set(Config.moons.map(m => m.product)));
-  return allOwnedOres.join('\n')
+
+  return Promise.map(allOwnedOres, ore => Accessors.GetMarketHubInfo('Jita', ore))
+    .then(ores => ores.forEach(ore => console.log(ore)));
+    //.then(ores => ores.join('\n'));
 }
 
 

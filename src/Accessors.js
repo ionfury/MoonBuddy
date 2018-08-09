@@ -9,7 +9,8 @@ module.exports = {
   GetObserversPromise:getObserversPromise,
   GetObservedPromise:getObservedPromise,
   GetUniqueVolumesPromise:getUniqueVolumesPromise,
-  GetObserverStructuresPromise:getObserverStructuresPromise
+  GetObserverStructuresPromise:getObserverStructuresPromise,
+  GetMarketHubInfo:getMarketHubInfo
 }
 
 /**
@@ -193,15 +194,14 @@ function getMarketHubInfo(system, item) {
   let getFuzzworkMarketData = getItemID.then(itemID => getFuzzworkMarketDataPromise(stationID, itemID));
 
   return Promise.join(getTypeInfo, getFuzzworkMarketData, (typeInfo, marketData) => {
-    return formatInfo(
-      system,
-      typeInfo.name,
-      typeInfo.type_id,
-      typeInfo.volume,
-      typeInfo.packaged_volume,
-      marketData[typeInfo.type_id].buy.max,
-      marketData[typeInfo.type_id].buy.volume,
-      marketData[typeInfo.type_id].sell.min,
-      marketData[typeInfo.type_id].sell.volume);
+    return {
+      name: typeInfo.name,
+      id: typeInfo.type_id,
+      volume: typeInfo.volume,
+      buy: marketData[typeInfo.type_id].buy.max,
+      buyVolume: marketData[typeInfo.type_id].buy.volume,
+      sell: marketData[typeInfo.type_id].sell.min,
+      sellVolume: marketData[typeInfo.type_id].sell.volume
+    };
   });
 }
