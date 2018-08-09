@@ -116,18 +116,6 @@ function getObserverStructuresPromise(accessTokenPromise, observersPromise) {
   });
 }
 
-
-function getFuzzworkMarketDataPromise(stationID, typeID) {
-
-  var options = {
-    method: 'GET',
-    url: `https://market.fuzzwork.co.uk/aggregates/?station=${stationID}&types=${typeID}`
-  }
-
-  return RequestPromise(options).then(JSON.parse);
-}
-
-
 function getTypeInfoPromise(typeID) {
   let options = {
     route: `universe/types/${typeID}`
@@ -135,7 +123,6 @@ function getTypeInfoPromise(typeID) {
 
   return Api.EsiGet(options).then(JSON.parse);
 }
-
 
 function getItemIDStrictPromise(item) {
   let options = {
@@ -191,7 +178,7 @@ function getMarketHubInfo(system, item) {
   }
   let getItemID = getItemIDStrictPromise(item);
   let getTypeInfo = getItemID.then(getTypeInfoPromise);
-  let getFuzzworkMarketData = getItemID.then(itemID => getFuzzworkMarketDataPromise(stationID, itemID));
+  let getFuzzworkMarketData = getItemID.then(itemID => Api.GetFuzzworkMarketDataPromise(stationID, itemID));
 
   return Promise.join(getTypeInfo, getFuzzworkMarketData, (typeInfo, marketData) => {
     return {
