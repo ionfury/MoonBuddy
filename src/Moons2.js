@@ -71,6 +71,7 @@ function iskM3(price, vol) {
 
 function getOwnedOrePrices() {
   //let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
+  console.log(Config.materials);
 
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => prices.map(price => `${price.name}: ${iskM3(price.sell, price.volume)} isk/m3`).join('\n'));
