@@ -64,7 +64,7 @@ function Announce()
 
 
 function getOwnedOrePrices() {
-  var allOwnedOres = Array.from(new Set(config.moons.map(m => m.product)));
+  var allOwnedOres = Array.from(new Set(Config.moons.map(m => m.product)));
   return allOwnedOres.join('\n')
 }
 
