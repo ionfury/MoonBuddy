@@ -67,7 +67,7 @@ function iskM3(price, vol) {
   let p = Number.parseFloat(price);
   let v = Number.parseFloat(vol);
 
-  return Utilites.FormatNumberForDisplay(p / v );
+  return Utilities.FormatNumberForDisplay(p / v );
 }
 
 function getOwnedOrePrices() {
