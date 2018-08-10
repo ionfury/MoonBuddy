@@ -86,32 +86,32 @@ function getMoonInfo() {
 
 function Announce2() {
   console.log('Announce2');
-  let moonInfo = getMoonInfo()
-  let todaysMoons = moonInfo.filter(moon => moon.hrsRemaining < 24);
 
-  return todaysMoons.then(moons => {
-    let string = '';
+  return getMoonInfo()
+    .then(moons => moons.filter(moon => moon.hrsRemaining < 24))
+    .then(moons => {
+      let string = '';
 
-    let valubleOres = moons.map(moon => moon.ores)
-      .flat()
-      .filter(ore => ore.iskm3 > BUYBACK_PRICE);
-    
-    if(valubleOres.length > 0) {
-      string += `\n@everyone: The corp needs you to mine and contract the following ores to corp @ 350 isk/m3: `;
-      string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
-    }
+      let valubleOres = moons.map(moon => moon.ores)
+        .flat()
+        .filter(ore => ore.iskm3 > BUYBACK_PRICE);
+      
+      if(valubleOres.length > 0) {
+        string += `\n@everyone: The corp needs you to mine and contract the following ores to corp @ 350 isk/m3: `;
+        string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
+      }
 
-    moons.forEach(moon => {
-      string += '```';
-      string += `${moon.name}:`;
-      moon.ores.forEach(ore => {
-        string += `\t${ore.quantity} m3 ${ore.product} (${ore.iskm3} isk/m3)`;
+      moons.forEach(moon => {
+        string += '```';
+        string += `${moon.name}:`;
+        moon.ores.forEach(ore => {
+          string += `\t${ore.quantity} m3 ${ore.product} (${ore.iskm3} isk/m3)`;
+        });
+        string += '```';
       });
-      string += '```';
-    });
 
-    return string;
-  });
+      return string;
+    });
 }
 
 function Announce() 
