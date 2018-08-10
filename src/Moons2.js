@@ -123,7 +123,7 @@ function Announce2() {
 }
 
 function formatProduct(quantity, hrsTotal, product, value, volume) {
-  return  `${Utilities.FormatNumberForDisplay(quantity * hrsTotal * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${product} (${iskM3(value, volume)} isk/m3)`;
+  return  `${Utilities.FormatNumberForDisplay(quantity * hrsTotal * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${product} (${iskM3(value, volume)} isk/m3, ${Utilities.FormatNumberForDisplay(quantity * hrsTotal * EXTRACTION_AMOUNT_PER_HOUR * value / volume)} isk total)`;
 }
 
 function Announce() 
