@@ -64,7 +64,7 @@ Client.on('message', msg => {
         .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "announce":
-      Moons.Announce(72)
+      Moons.Announce(1)
         .then(moons => msg.channel.send(moons))
         .catch(err => msg.channel.send(`:x: ${err}`));
       break;
