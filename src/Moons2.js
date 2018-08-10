@@ -105,7 +105,7 @@ function Announce2() {
         .filter(ore => ore.value/ore.volume > BUYBACK_PRICE);
       
       if(valubleOres.length > 0) {
-        string += `\n@everyone:\n Contract the following ores to corp @ 350 isk/m3: `;
+        string += `\n@everyone:\n The corp needs you to contract the following ores to corp @ 350 isk/m3: `;
         string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
       }
 
