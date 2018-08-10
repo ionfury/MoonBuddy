@@ -18,7 +18,7 @@ function ScheduleDailyNotifications() {
 }
 
 Client.on('ready', () => {
-  Schedule({ on: '0 */1 * * *'}, function () {
+  Schedule({ on: '0 * * * *'}, function () {
     return Moons.Announce(1).then(moons => Client.channels.find("name", "moon-notifications").send(moons))
   });
   console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
