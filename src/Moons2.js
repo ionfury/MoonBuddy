@@ -51,7 +51,7 @@ function getExtractingMoonData() {
         let moonExtraction = extractions.filter(extraction => extraction.moon_id == moonID)[0];
         let chunkArrivalTime = new Date(moonExtraction.chunk_arrival_time);
         
-        let extractionStartTime = new Date(data.moonExtraction.extraction_start_time);
+        let extractionStartTime = new Date(moonExtraction.extraction_start_time);
         var hrsTotal = new DateDiff(chunkArrivalTime, extractionStartTime);
 
         let now = new Date();
