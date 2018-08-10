@@ -102,7 +102,7 @@ function Announce2() {
 
       let valubleOres = moons.map(moon => moon.ores);
       valubleOres = [].concat.apply([], valubleOres)
-        .filter(ore => ore.value > BUYBACK_PRICE);
+        .filter(ore => ore.value/ore.volume > BUYBACK_PRICE);
       
       if(valubleOres.length > 0) {
         string += `\n@everyone: The corp needs you to mine and contract the following ores to corp @ 350 isk/m3: `;
@@ -113,7 +113,8 @@ function Announce2() {
         string += '```';
         string += `${moon.name}:`;
         moon.ores.forEach(ore => {
-          string += `\t${formatProduct(ore.quantity, ore.hrsTotal, ore.product, ore.value, ore.volume)}`;
+          console.log(ore.quantity, ore.hrsTotal)
+          string += `\n\t${formatProduct(ore.quantity, ore.hrsTotal, ore.product, ore.value, ore.volume)}`;
         });
         string += '```';
       });
