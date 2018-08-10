@@ -70,7 +70,7 @@ function iskM3(price, vol) {
   return Utilities.FormatNumberForDisplay(p / v);
 }
 
-function getOwnedOrePrices() {
+function getOwnedOrePrices(search) {
   let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
   let ores = Reprocessing;
 
