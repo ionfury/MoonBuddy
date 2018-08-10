@@ -10,6 +10,7 @@ const BUYBACK_MINIMUM = 500;
 const BUYBACK_PRICE = 450;
 const REFINE_RATE = 0.89;
 const VALUE_MULTIPLIER = 1;
+const TAX_RATE = 10;
 
 function getMaterialValuesPromise() {
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
@@ -112,16 +113,17 @@ function formatMoonInfo(moons) {
   let valubleOres = moons.map(moon => moon.ores);
   valubleOres = [].concat.apply([], valubleOres)
     .filter(ore => ore.value/ore.volume > BUYBACK_MINIMUM);
+
+  valubleOres = Array.from(new Set(valubleOres));
   
   if(valubleOres.length > 0) {
     let string = '';
-    string += `\n@everyone:\n The corp needs you to mine and contract the following ores to corp @ ${BUYBACK_PRICE} isk/m3: `;
-    string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
+    string += `\n@everyone:\n The corp needs you to mine and contract the following ores to corp: @ ${BUYBACK_PRICE} isk/m3: ${valubleOres.map(ore => `**${ore.product}**`).join(', ')}`;
     strings.push(string);
   }
 
   if(moons.length > 0) {
-    strings.push('\nContract 10% of all mined non-buyback ore to corp within a week of mining.');
+    strings.push(`\nContract ${TAX_RATE}% of all mined non-buyback ore to corp in **XKZ8-H - The Succ** within a week of mining except: **Mercoxit** and **Ochre**.`);
   }
 
   moons.forEach(moon => {
