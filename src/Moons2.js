@@ -77,14 +77,14 @@ function getOwnedOrePrices(search) {
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
       return Reprocessing
-        .filter(ore => ore.Ore.indexOf(search) > -1)
+        .filter(ore => ore.Ore.includes(search))
         .map(ore => {
         let value = 0;
         prices.forEach(price => {
           value+= ore[price.name] * price.buy;
         });
         value = value / ore.Required * 0.89;
-        return `${ore.Ore}: ${iskM3(value, ore.Volume)}`;
+        return `${ore.Ore}: ${iskM3(value, ore.Volume)} isk/m3`;
       }).join('\n');
     });
 
