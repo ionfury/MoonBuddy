@@ -57,7 +57,7 @@ Client.on('message', msg => {
     case "values":
       Moons.GetOrePrices(search)
         .then(prices => Utilities.SplitString(prices,DISCORD_MESSAGE_LENGTH))
-        .then(messages => messages.forEach(message => msg.author.send(message)))
+        .then(messages => messages.forEach(message => msg.author.send(`\`\`\`${message}\`\`\``)))
         .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "announce":
