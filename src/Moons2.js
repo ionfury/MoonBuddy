@@ -10,7 +10,7 @@ let Reprocessing = require('../reprocessing.json');
 
 let MINING_DURATION_DAYS = 25;
 let EXTRACTION_AMOUNT_PER_HOUR = 20000;
-
+/*
 function getMaterialValuesPromise() {
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
@@ -78,7 +78,7 @@ function getMoonInfo() {
     });    
   });
 }
-
+*/
 function Announce() 
 {
   let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
@@ -283,6 +283,6 @@ module.exports = {
   GetScheduledMoons:GetScheduledMoons,
   GetInactiveMoons:GetInactiveMoons,
   Announce:Announce,
-  GetOrePrices:getOwnedOrePrices,
-  GetExtractingMoonData:getMoonInfo
+  GetOrePrices:getOwnedOrePrices//,
+  //GetExtractingMoonData:getMoonInfo
 };
