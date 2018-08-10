@@ -92,8 +92,8 @@ function Announce2() {
     .then(moons => {
       let string = '';
 
-      let valubleOres = moons.map(moon => moon.ores)
-        .flat()
+      let valubleOres = moons.map(moon => moon.ores);
+      valubleOres = [].concat.apply([], valubleOres)
         .filter(ore => ore.iskm3 > BUYBACK_PRICE);
       
       if(valubleOres.length > 0) {
