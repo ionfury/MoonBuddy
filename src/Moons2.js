@@ -88,7 +88,8 @@ function Announce2() {
   console.log('Announce2');
 
   return getMoonInfo()
-    .then(moons => moons.filter(moon => moon.hrsRemaining < 24))
+    .then(console.log)
+    /*.then(moons => moons.filter(moon => moon.hrsRemaining < 24))
     .then(moons => {
       let string = '';
 
@@ -111,7 +112,7 @@ function Announce2() {
       });
 
       return string;
-    });
+    });*/
 }
 
 function Announce() 
