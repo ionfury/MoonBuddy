@@ -93,11 +93,6 @@ function getMoonInfo() {
 }
 
 function Scheduled(search) {
-  if(search != '') {
-    let re = new RegExp(search, 'i');
-    schedule = schedule.filter(string => re.test(string.value));
-  }
-
   let re = new RegExp(search, 'i');
   return getMoonInfo()
     .then(formatMoonInfo)
