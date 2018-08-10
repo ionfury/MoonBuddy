@@ -85,8 +85,8 @@ function getOwnedOrePrices() {
           value+= ore[price.name] * price.buy;
         });
         value = value / ore.Required;
-        return iskM3(value, ore.Volume);
-      });
+        return `${ore.Name}: ${iskM3(value, ore.Volume)}`;
+      }).join('\n');
     });
 
     //.then(prices => prices.map(price => `${price.name}: ${iskM3(price.sell, price.volume)} isk/m3`).join('\n'));
