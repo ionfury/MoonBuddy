@@ -13,6 +13,7 @@ let EXTRACTION_AMOUNT_PER_HOUR = 20000;
 let BUYBACK_PRICE = 350;
 
 function getMaterialValuesPromise() {
+  console.log('getMaterialValuesPromise');
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
       return Reprocessing
@@ -31,6 +32,7 @@ function getMaterialValuesPromise() {
 }
 
 function getExtractingMoonData() {
+  console.log('getExtractingMoonData');
   let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
   let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
 
@@ -55,6 +57,7 @@ function getExtractingMoonData() {
 }
 
 function getMoonInfo() {
+  console.log('getMoonInfo');
   let getValues = getMaterialValuesPromise();
   let getData = getExtractingMoonData();
   let getDataToday = getData.then(moonData => moonData.filter(moon => moon.hrsRemaining < 24));
@@ -82,6 +85,7 @@ function getMoonInfo() {
 }
 
 function Announce2() {
+  console.log('Announce2');
   let moonInfo = getMoonInfo()
   let todaysMoons = moonInfo.filter(moon => moon.hrsRemaining < 24);
 
