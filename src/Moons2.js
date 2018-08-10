@@ -71,13 +71,15 @@ function iskM3(price, vol) {
 }
 
 function getOwnedOrePrices(search) {
-  let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
-  let ores = Reprocessing;
+  //let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
+  //let ores = Reprocessing;
+  let re = new RegExp(search, 'i');
+  //schedule = schedule.filter(string => re.test(string.value));
 
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
       return Reprocessing
-        .filter(ore => ore.Ore.includes(search))
+        .filter(ore => re.test(ore.Ore))
         .map(ore => {
         let value = 0;
         prices.forEach(price => {
