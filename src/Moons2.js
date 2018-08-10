@@ -113,8 +113,7 @@ function Announce2() {
         string += '```';
         string += `${moon.name}:`;
         moon.ores.forEach(ore => {
-          console.log(ore.quantity, ore.hrsTotal)
-          string += `\n\t${formatProduct(ore.quantity, ore.hrsTotal, ore.product, ore.value, ore.volume)}`;
+          string += `\n\t${formatProduct(ore.quantity, moon.hrsTotal, ore.product, ore.value, ore.volume)}`;
         });
         string += '```';
       });
