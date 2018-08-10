@@ -6,6 +6,7 @@ let dateFormat = require('dateformat');
 let DB = require(`./db.js`);
 let DateDiff = require(`date-diff`);
 let Utilities = require (`./Utilities.js`);
+let Reprocessing = require('../reprocessing.json');
 
 let MINING_DURATION_DAYS = 25;
 let EXTRACTION_AMOUNT_PER_HOUR = 20000;
@@ -66,15 +67,29 @@ function iskM3(price, vol) {
   let p = Number.parseFloat(price);
   let v = Number.parseFloat(vol);
 
-  return Math.round(p / v * 100) / 100;
+  return Utilites.FormatNumberForDisplay(p / v );
 }
 
 function getOwnedOrePrices() {
-  //let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
+  let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
+  let ores = Reprocessing;
+
+
   console.log(Config.materials);
 
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
-    .then(prices => prices.map(price => `${price.name}: ${iskM3(price.sell, price.volume)} isk/m3`).join('\n'));
+    .then(prices => {
+      return Reprocessing.map(ore => {
+        let value = 0;
+        prices.forEach(price => {
+          value+= ore[price.name] * price.buy;
+        });
+        value = value / ore.Required;
+        return iskM3(value, ore.Volume);
+      });
+    });
+
+    //.then(prices => prices.map(price => `${price.name}: ${iskM3(price.sell, price.volume)} isk/m3`).join('\n'));
 }
 
 
