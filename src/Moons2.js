@@ -25,7 +25,8 @@ function getMaterialValuesPromise() {
           value = value / ore.Required * 0.89;
           return {
             'name': ore.Ore,
-            'value': iskM3(value, ore.Volume)
+            'value': value,
+            'volume': ore.Volume
           };
         });
     });
@@ -49,9 +50,13 @@ function getExtractingMoonData() {
         let moon = moonJson.filter(moon => moon.moonID == moonID)[0];
         let moonExtraction = extractions.filter(extraction => extraction.moon_id == moonID)[0];
         let chunkArrivalTime = new Date(moonExtraction.chunk_arrival_time);
+        
+        let extractionStartTime = new Date(data.moonExtraction.extraction_start_time);
+        var hrsTotal = new DateDiff(chunkArrivalTime, extractionStartTime);
+
         let now = new Date();
         var diff = new DateDiff(chunkArrivalTime, now);
-        return { "moonExtraction": moonExtraction, "moon": moon, "hrsRemaining": diff.hours() };
+        return { "moonExtraction": moonExtraction, "moon": moon, "hrsTotal": hrsTotal.hours(), "hrsRemaining": diff.hours() };
       });
     });
 }
@@ -69,15 +74,18 @@ function getMoonInfo() {
       let ores = moonJson
         .filter(json => json.name === data.moon.name)
         .map(json => { 
+          let item = values.find(a => a.name === json.product);
           return {
             'product':json.product, 
             'quantity':json.quantity,
-            'iskm3': values.find(a => a.name === json.product).value
+            'value': item.value,
+            'volume': item.volume
           }});
 
       return {
         'name': data.moon.name,
         'hrsRemaining': data.hrsRemaining,
+        'hrsTotal': data.hrsTotal,
         'ores': ores
       };
     });    
@@ -94,7 +102,7 @@ function Announce2() {
 
       let valubleOres = moons.map(moon => moon.ores);
       valubleOres = [].concat.apply([], valubleOres)
-        .filter(ore => ore.iskm3 > BUYBACK_PRICE);
+        .filter(ore => ore.value > BUYBACK_PRICE);
       
       if(valubleOres.length > 0) {
         string += `\n@everyone: The corp needs you to mine and contract the following ores to corp @ 350 isk/m3: `;
@@ -105,13 +113,17 @@ function Announce2() {
         string += '```';
         string += `${moon.name}:`;
         moon.ores.forEach(ore => {
-          string += `\t${ore.quantity} m3 ${ore.product} (${ore.iskm3} isk/m3)`;
+          string += `\t${formatProduct(ore.quantity, ore.hrsTotal, ore.product, ore.value, ore.volume)}`;
         });
         string += '```';
       });
 
       return string;
     });
+}
+
+function formatProduct(quantity, hrsTotal, product, value, volume) {
+  return  `${Utilities.FormatNumberForDisplay(quantity * hrsTotal * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${product} (${iskM3(value, volume)} isk/m3)`;
 }
 
 function Announce() 
