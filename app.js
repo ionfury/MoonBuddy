@@ -1,3 +1,12 @@
+global.base_dir = __dirname;
+global.abs_path = function(path) {
+  return base_dir + path;
+}
+global.include = function(file) {
+  return require(this.abs_path('/' + file));
+}
+
+
 let Discord = require(`discord.js`);
 let Promise = require('bluebird');
 //let Chunk = require('node-text-chunk');

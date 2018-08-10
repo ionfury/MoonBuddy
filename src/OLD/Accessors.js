@@ -85,7 +85,7 @@ function getObservedPromise(accessTokenPromise, observersPromise) {
  * Gets a promise to return unique volumes of observed info
  * @param {Promise} accessTokenPromise The access token promise.
  * @param {Promise} observedPromise the observed promise.
- * @returns A RequestPromise.
+ * @returns A Promise.
  */
 function getUniqueVolumesPromise(accessTokenPromise, observedPromise) {
   return Promise.join(accessTokenPromise, observedPromise, (accessToken, observed) => {
@@ -101,7 +101,7 @@ function getUniqueVolumesPromise(accessTokenPromise, observedPromise) {
  * Gets a promise to return structure info for observers
  * @param {*Promise} accessTokenPromise The access token promise.
  * @param {*Promise} observersPromise the observers promise.
- * @returns A RequestPromise.
+ * @returns A Promise.
  */
 function getObserverStructuresPromise(accessTokenPromise, observersPromise) {
   return Promise.join(accessTokenPromise, observersPromise, (accessToken, observers) => {
