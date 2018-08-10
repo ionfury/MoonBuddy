@@ -74,12 +74,11 @@ function getOwnedOrePrices() {
   let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
   let ores = Reprocessing;
 
-
-  console.log(Config.materials);
-
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
-      return Reprocessing.map(ore => {
+      return Reprocessing
+        .filter(ore => ore.Ore.indexOf(search) > -1)
+        .map(ore => {
         let value = 0;
         prices.forEach(price => {
           value+= ore[price.name] * price.buy;
@@ -217,6 +216,6 @@ module.exports = {
   GetScheduledMoons:GetScheduledMoons,
   GetInactiveMoons:GetInactiveMoons,
   Announce:Announce,
-  GetOwnedOrePrices:getOwnedOrePrices,
+  GetOrePrices:getOwnedOrePrices,
   Test:Test
 };
