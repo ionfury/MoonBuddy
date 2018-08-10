@@ -67,4 +67,5 @@ Client.on('message', msg => {
   }
 });
 
+console.log("heyyy");
 Client.login(process.env.token);
