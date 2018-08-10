@@ -5,12 +5,13 @@ let DateDiff = require(`date-diff`);
 let Utilities = require (`./Utilities.js`);
 let Reprocessing = require('../reprocessing.json');
 
-let EXTRACTION_AMOUNT_PER_HOUR = 20000;
-let BUYBACK_MINIMUM = 400;
-let BUYBACK_PRICE = 350;
+const EXTRACTION_AMOUNT_PER_HOUR = 20000;
+const BUYBACK_MINIMUM = 500;
+const BUYBACK_PRICE = 450;
+const REFINE_RATE = 0.89;
+const VALUE_MULTIPLIER = 1;
 
 function getMaterialValuesPromise() {
-  console.log('getMaterialValuesPromise');
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
       return Reprocessing
@@ -19,7 +20,7 @@ function getMaterialValuesPromise() {
           prices.forEach(price => {
             value+= ore[price.name] * price.buy;
           });
-          value = value / ore.Required * 0.89;
+          value = value / ore.Required * REFINE_RATE * VALUE_MULTIPLIER;
           return {
             'name': ore.Ore,
             'value': value,
@@ -30,7 +31,6 @@ function getMaterialValuesPromise() {
 }
 
 function getExtractingMoonData() {
-  console.log('getExtractingMoonData');
   let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
   let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
 
@@ -59,14 +59,12 @@ function getExtractingMoonData() {
 }
 
 function getMoonInfo() {
-  console.log('getMoonInfo');
   let getValues = getMaterialValuesPromise();
   let getData = getExtractingMoonData();
   let getDataToday = getData;
   let moonJson = Config.moons;
 
   return Promise.join(getValues, getDataToday, (values, moonData) => {
-
     return moonData.map(data => {
       let ores = moonJson
         .filter(json => json.name === data.moon.name)
@@ -101,9 +99,9 @@ function Scheduled(search) {
     .then(strings => strings.join('\n'));
 }
 
-function ScheduledToday() {
+function ScheduledHours(hrs = 24) {
   return getMoonInfo()
-    .then(moons => moons.filter(moon => moon.hrsRemaining < 24))
+    .then(moons => moons.filter(moon => moon.hrsRemaining < hrs))
     .then(formatMoonInfo)
     .then(strings => strings.join('\n'));
 }
@@ -117,12 +115,12 @@ function formatMoonInfo(moons) {
   
   if(valubleOres.length > 0) {
     let string = '';
-    string += `\n@everyone:\n The corp needs you to contract the following ores to corp @ ${BUYBACK_PRICE} isk/m3: `;
+    string += `\n@everyone:\n The corp needs you to mine and contract the following ores to corp @ ${BUYBACK_PRICE} isk/m3: `;
     string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
     strings.push(string);
   }
 
-  strings.push('\n\nContract 10% of all mined non-buyback ore to corp within a week of mining.')
+  strings.push('\nContract 10% of all mined non-buyback ore to corp within a week of mining.')
 
   moons.forEach(moon => {
     let string = '';
@@ -234,6 +232,6 @@ module.exports = {
   GetActiveMoons:GetActiveMoons,
   GetScheduledMoons:Scheduled,
   GetInactiveMoons:GetInactiveMoons,
-  Announce:ScheduledToday,
+  Announce:ScheduledHours,
   GetOrePrices:getOwnedOrePrices
 };

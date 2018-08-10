@@ -11,12 +11,15 @@ const DISCORD_MESSAGE_LENGTH = 1800;
 
 function Announce()
 {
-  return Moons.Announce().then(moons => Client.channels.find("name", "the_succ").send(moons))
+}
+
+function ScheduleDailyNotifications() {
+
 }
 
 Client.on('ready', () => {
-  Schedule({ on: '0 0 */1 * *'}, function () {
-    return Announce();
+  Schedule({ on: '0 */1 * * *'}, function () {
+    return Moons.Announce(1).then(moons => Client.channels.find("name", "moon-notifications").send(moons))
   });
   console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
 });
@@ -61,7 +64,7 @@ Client.on('message', msg => {
         .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "announce":
-      Moons.Announce()
+      Moons.Announce(72)
         .then(moons => msg.channel.send(moons))
         .catch(err => msg.channel.send(`:x: ${err}`));
       break;
