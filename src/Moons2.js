@@ -1,14 +1,10 @@
 let Config = require(`../config.json`);
 let Promise = require('bluebird');
 let Accessors = require(`./Accessors.js`);
-let Api = require(`./Api.js`);
-let dateFormat = require('dateformat');
-let DB = require(`./db.js`);
 let DateDiff = require(`date-diff`);
 let Utilities = require (`./Utilities.js`);
 let Reprocessing = require('../reprocessing.json');
 
-let MINING_DURATION_DAYS = 25;
 let EXTRACTION_AMOUNT_PER_HOUR = 20000;
 let BUYBACK_MINIMUM = 400;
 let BUYBACK_PRICE = 350;
@@ -66,7 +62,7 @@ function getMoonInfo() {
   console.log('getMoonInfo');
   let getValues = getMaterialValuesPromise();
   let getData = getExtractingMoonData();
-  let getDataToday = getData;//.then(moonData => moonData.filter(moon => moon.hrsRemaining < 24));
+  let getDataToday = getData;
   let moonJson = Config.moons;
 
   return Promise.join(getValues, getDataToday, (values, moonData) => {
@@ -126,6 +122,8 @@ function formatMoonInfo(moons) {
     strings.push(string);
   }
 
+  strings.push('\n\nContract 10% of all mined non-buyback ore to corp within a week of mining.')
+
   moons.forEach(moon => {
     let string = '';
     string += '```';
@@ -143,58 +141,6 @@ function formatMoonInfo(moons) {
 
 function formatProduct(quantity, hrsTotal, product, value, volume) {
   return  `${Utilities.FormatNumberForDisplay(quantity * hrsTotal * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${product} (${iskM3(value, volume)} isk/m3, ${Utilities.FormatNumberForDisplay(quantity * hrsTotal * EXTRACTION_AMOUNT_PER_HOUR * value / volume)} isk total)`;
-}
-
-function Announce() 
-{
-  let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
-  let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
-  let getValues = getMaterialValuesPromise();
-  return Promise.join(getValues, getExtractions, (values, extractions) => {
-    let extractingMoonIds = extractions.map(extraction => extraction.moon_id.toString());
-    let moonJson = Config.moons;
-    
-    let extractingMoons = moonJson.filter(moon => extractingMoonIds.indexOf(moon.moonID) >= 0);
-    let uniqueMoonIds = Array.from(new Set(extractingMoons.map(moon => moon.moonID)));
-
-    let moonData = uniqueMoonIds.map(moonID => {
-      let moon = moonJson.filter(moon => moon.moonID == moonID)[0];
-      let moonExtraction = extractions.filter(extraction => extraction.moon_id == moonID)[0];
-      let chunkArrivalTime = new Date(moonExtraction.chunk_arrival_time);
-      let now = new Date();
-      var diff = new DateDiff(chunkArrivalTime, now);
-      return { "moonExtraction": moonExtraction, "moon": moon, "hrsRemaining": diff.hours() };
-    });
-
-    moonData = moonData.filter(moon => moon.hrsRemaining < 24);
-
-    if(moonData.length < 1)
-      return "";
-
-    let scheduleString = '';
-    
-    scheduleString += `@here The following extractions finish today:`
-    scheduleString += moonData.map(data => {
-      let string = '';
-      let ores = moonJson
-        .filter(json => json.name === data.moon.name)
-        .map(json => { return {"product":json.product, "quantity":json.quantity}});
-      
-      let chunkArrivalTime = new Date(data.moonExtraction.chunk_arrival_time);
-      let extractionStartTime = new Date(data.moonExtraction.extraction_start_time);
-      var diff = new DateDiff(chunkArrivalTime, extractionStartTime);
-
-      string += `in ${data.hrsRemaining} hrs:`;
-      string += `\n\t${data.moon.name}\n\t\t`;
-      string += ores.map(ore => `${Utilities.FormatNumberForDisplay(ore.quantity * diff.hours() * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${ore.product} @${values.find(a => a.name === ore.product).value} isk/m3`).join('\n\t\t');
-  
-      string = `\`\`\`${string}\`\`\``;
-  
-      return string;
-    });
-    
-    return scheduleString;
-  });
 }
 
 function iskM3(price, vol) {
@@ -220,8 +166,6 @@ function getOwnedOrePrices(search) {
         return `${ore.Ore}: ${iskM3(value, ore.Volume)} isk/m3`;
       }).join('\n');
     });
-
-    //.then(prices => prices.map(price => `${price.name}: ${iskM3(price.sell, price.volume)} isk/m3`).join('\n'));
 }
 
 
@@ -260,11 +204,6 @@ var GetOwnedMoons = (search) =>{
     });
 }
 
-var Test = (search) => {
-
-
-}
-
 function GetInactiveMoons(){
   let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
   let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
@@ -288,59 +227,6 @@ function GetInactiveMoons(){
 function GetActiveMoons(search)
 {
   return "Not implemented!";
-}
-
-///[name] - [extraction ends] (time remaining) ([product 1] [product 1 %] [product 2] [product 2%])
-function GetScheduledMoons(search)
-{
-  let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
-  let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
-
-  return getExtractions.then(extractions => {
-    let extractingMoonIds = extractions.map(extraction => extraction.moon_id.toString());
-    let moonJson = Config.moons;
-    
-    let extractingMoons = moonJson.filter(moon => extractingMoonIds.indexOf(moon.moonID) >= 0);
-    let uniqueMoonIds = Array.from(new Set(extractingMoons.map(moon => moon.moonID)));
-
-    let moonData = uniqueMoonIds.map(moonID => {
-      let moon = moonJson.filter(moon => moon.moonID == moonID)[0];
-      let moonExtraction = extractions.filter(extraction => extraction.moon_id == moonID)[0];
-      let chunkArrivalTime = new Date(moonExtraction.chunk_arrival_time);
-      let now = new Date();
-      var diff = new DateDiff(chunkArrivalTime, now);
-      return { "moonExtraction": moonExtraction, "moon": moon, "hrsRemaining": diff.hours() };
-    });
-
-
-    let schedule = moonData.map(data => {
-      let string = '';
-      let ores = moonJson
-        .filter(json => json.name === data.moon.name)
-        .map(json => { return {"product":json.product, "quantity":json.quantity}});
-      
-      let chunkArrivalTime = new Date(data.moonExtraction.chunk_arrival_time);
-      let extractionStartTime = new Date(data.moonExtraction.extraction_start_time);
-      var diff = new DateDiff(chunkArrivalTime, extractionStartTime);
-
-      string += `in ${data.hrsRemaining} hrs:`;
-      string += `\n\t${data.moon.name}\n\t\t`;
-      string += ores.map(ore => `${Utilities.FormatNumberForDisplay(ore.quantity * diff.hours() * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${ore.product}`).join('\n\t\t');
-  
-      string = `\`\`\`${string}\`\`\``;
-  
-      return  { value: string, remaining: data.hrsRemaining };
-    });
-    
-    if(search != '') {
-      let re = new RegExp(search, 'i');
-      schedule = schedule.filter(string => re.test(string.value));
-    }
-    
-    schedule.sort((a, b) => (Number.parseFloat(a.remaining) - Number.parseFloat(b.remaining)));
-
-    return schedule.map(m => m.value).join('\n');;
-  });
 }
 
 module.exports = {
