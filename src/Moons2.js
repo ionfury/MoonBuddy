@@ -15,8 +15,26 @@ function Announce()
 {
   let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
   let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
+  let getValues = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
+    .then(prices => {
+      return Reprocessing
+        .map(ore => {
+        let value = 0;
+        prices.forEach(price => {
+          value+= ore[price.name] * price.buy;
+        });
+        value = value / ore.Required * 0.89;
+        return {
+          name = ore.Ore,
+          value = iskM3(value, ore.Volume)
+        };
+      });
+    });
+  return Promise.join(getValues, getExtractions, (values, extractions) => {
 
-  return getExtractions.then(extractions => {
+ // });
+
+  //return getExtractions.then(extractions => {
     let extractingMoonIds = extractions.map(extraction => extraction.moon_id.toString());
     let moonJson = Config.moons;
     
@@ -52,7 +70,7 @@ function Announce()
 
       string += `in ${data.hrsRemaining} hrs:`;
       string += `\n\t${data.moon.name}\n\t\t`;
-      string += ores.map(ore => `${Utilities.FormatNumberForDisplay(ore.quantity * diff.hours() * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${ore.product}`).join('\n\t\t');
+      string += ores.map(ore => `${Utilities.FormatNumberForDisplay(ore.quantity * diff.hours() * EXTRACTION_AMOUNT_PER_HOUR)} m3 ${ore.product} @${values.find(a => a.name === ore.product).value} isk/m3`).join('\n\t\t');
   
       string = `\`\`\`${string}\`\`\``;
   
@@ -71,10 +89,7 @@ function iskM3(price, vol) {
 }
 
 function getOwnedOrePrices(search) {
-  //let materialPricePromise = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat));
-  //let ores = Reprocessing;
   let re = new RegExp(search, 'i');
-  //schedule = schedule.filter(string => re.test(string.value));
 
   return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
