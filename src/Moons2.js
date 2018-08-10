@@ -107,8 +107,6 @@ function ScheduledHours(hrs = 24) {
 }
 
 function formatMoonInfo(moons) {
-  if(moons.legnth < 1)
-    return '';
   let strings = [];
 
   let valubleOres = moons.map(moon => moon.ores);
@@ -122,7 +120,9 @@ function formatMoonInfo(moons) {
     strings.push(string);
   }
 
-  strings.push('\nContract 10% of all mined non-buyback ore to corp within a week of mining.')
+  if(moons.length > 0) {
+    strings.push('\nContract 10% of all mined non-buyback ore to corp within a week of mining.');
+  }
 
   moons.forEach(moon => {
     let string = '';

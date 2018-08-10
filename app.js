@@ -64,14 +64,9 @@ Client.on('message', msg => {
         .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
     case "announce":
-      Moons.Announce(1)
+      Moons.Announce(24)
         .then(moons => msg.channel.send(moons))
         .catch(err => msg.channel.send(`:x: ${err}`));
-      break;
-    case "test":
-      Moons.GetExtractingMoonData()
-        .then(moons => msg.channel.send(moons))
-        .catch(err =>  msg.channel.send(`:x: ${err}`));
       break;
   }
 });
