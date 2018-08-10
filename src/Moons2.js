@@ -107,6 +107,8 @@ function ScheduledHours(hrs = 24) {
 }
 
 function formatMoonInfo(moons) {
+  if(moons.legnth < 1)
+    return '';
   let strings = [];
 
   let valubleOres = moons.map(moon => moon.ores);
