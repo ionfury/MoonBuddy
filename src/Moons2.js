@@ -92,34 +92,53 @@ function getMoonInfo() {
   });
 }
 
-function Announce2() {
+function Scheduled(search) {
+  if(search != '') {
+    let re = new RegExp(search, 'i');
+    schedule = schedule.filter(string => re.test(string.value));
+  }
+
+  let re = new RegExp(search, 'i');
+  return getMoonInfo()
+    .then(formatMoonInfo)
+    .then(items => items.filter(item => re.test(item)))
+    .then(strings => strings.join('\n'));
+}
+
+function ScheduledToday() {
   return getMoonInfo()
     .then(moons => moons.filter(moon => moon.hrsRemaining < 24))
-    .then(formatMoonInfo);
+    .then(formatMoonInfo)
+    .then(strings => strings.join('\n'));
 }
 
 function formatMoonInfo(moons) {
-  let string = '';
+  let strings = [];
 
   let valubleOres = moons.map(moon => moon.ores);
   valubleOres = [].concat.apply([], valubleOres)
     .filter(ore => ore.value/ore.volume > BUYBACK_PRICE);
   
   if(valubleOres.length > 0) {
+    let string = '';
     string += `\n@everyone:\n The corp needs you to contract the following ores to corp @ 350 isk/m3: `;
     string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
+    strings.push(string);
   }
 
   moons.forEach(moon => {
+    let string = '';
     string += '\n```';
-    string += `${moon.name}:`;
+    string += `in ${moons.hrsRemaining} hrs:`;
+    string += `\n\t${moon.name}:`;
     moon.ores.forEach(ore => {
-      string += `\n\t${formatProduct(ore.quantity, moon.hrsTotal, ore.product, ore.value, ore.volume)}`;
+      string += `\n\t\t${formatProduct(ore.quantity, moon.hrsTotal, ore.product, ore.value, ore.volume)}`;
     });
     string += '```';
+    strings.push(string);
   });
 
-  return string;
+  return strings;
 }
 
 function formatProduct(quantity, hrsTotal, product, value, volume) {
@@ -327,9 +346,8 @@ function GetScheduledMoons(search)
 module.exports = {
   GetOwnedMoons:GetOwnedMoons,
   GetActiveMoons:GetActiveMoons,
-  GetScheduledMoons:GetScheduledMoons,
+  GetScheduledMoons:Scheduled,
   GetInactiveMoons:GetInactiveMoons,
-  Announce:Announce,
-  GetOrePrices:getOwnedOrePrices,
-  GetExtractingMoonData:Announce2
+  Announce:ScheduledToday,
+  GetOrePrices:getOwnedOrePrices
 };
