@@ -67,7 +67,8 @@ Client.on('message', msg => {
       break;
     case "test":
       Moons.GetExtractingMoonData()
-        .then(moonData => console.log(moonData));;
+        .then(moons => msg.author.send(moons))
+        .catch(err =>  msg.author.send(`:x: ${err}`));
       break;
   }
 });

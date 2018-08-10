@@ -110,7 +110,7 @@ function Announce2() {
       }
 
       moons.forEach(moon => {
-        string += '```';
+        string += '\n```';
         string += `${moon.name}:`;
         moon.ores.forEach(ore => {
           string += `\n\t${formatProduct(ore.quantity, moon.hrsTotal, ore.product, ore.value, ore.volume)}`;
