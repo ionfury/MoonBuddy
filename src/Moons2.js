@@ -10,6 +10,7 @@ let Reprocessing = require('../reprocessing.json');
 
 let MINING_DURATION_DAYS = 25;
 let EXTRACTION_AMOUNT_PER_HOUR = 20000;
+let BUYBACK_MINIMUM = 400;
 let BUYBACK_PRICE = 350;
 
 function getMaterialValuesPromise() {
@@ -112,19 +113,19 @@ function formatMoonInfo(moons) {
 
   let valubleOres = moons.map(moon => moon.ores);
   valubleOres = [].concat.apply([], valubleOres)
-    .filter(ore => ore.value/ore.volume > BUYBACK_PRICE);
+    .filter(ore => ore.value/ore.volume > BUYBACK_MINIMUM);
   
   if(valubleOres.length > 0) {
     let string = '';
-    string += `\n@everyone:\n The corp needs you to contract the following ores to corp @ 350 isk/m3: `;
+    string += `\n@everyone:\n The corp needs you to contract the following ores to corp @ ${BUYBACK_PRICE} isk/m3: `;
     string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
     strings.push(string);
   }
 
   moons.forEach(moon => {
     let string = '';
-    string += '\n```';
-    string += `in ${moons.hrsRemaining} hrs:`;
+    string += '```';
+    string += `in ${moon.hrsRemaining} hrs:`;
     string += `\n\t${moon.name}:`;
     moon.ores.forEach(ore => {
       string += `\n\t\t${formatProduct(ore.quantity, moon.hrsTotal, ore.product, ore.value, ore.volume)}`;
