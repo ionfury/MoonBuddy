@@ -92,10 +92,9 @@ function Announce2() {
   return todaysMoons.then(moons => {
     let string = '';
 
-    let valubleOres = moons
-      .map(moon => moon.ores)
+    let valubleOres = moons.map(moon => moon.ores)
       .flat()
-      .filter(ores => ore.iskm3 > BUYBACK_PRICE);
+      .filter(ore => ore.iskm3 > BUYBACK_PRICE);
     
     if(valubleOres.length > 0) {
       string += `\n@everyone: The corp needs you to mine and contract the following ores to corp @ 350 isk/m3: `;
