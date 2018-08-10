@@ -19,16 +19,16 @@ function Announce()
     .then(prices => {
       return Reprocessing
         .map(ore => {
-        let value = 0;
-        prices.forEach(price => {
-          value+= ore[price.name] * price.buy;
+          let value = 0;
+          prices.forEach(price => {
+            value+= ore[price.name] * price.buy;
+          });
+          value = value / ore.Required * 0.89;
+          return {
+            'name': ore.Ore,
+            'value': iskM3(value, ore.Volume)
+          };
         });
-        value = value / ore.Required * 0.89;
-        return {
-          name = ore.Ore,
-          value = iskM3(value, ore.Volume)
-        };
-      });
     });
   return Promise.join(getValues, getExtractions, (values, extractions) => {
 
