@@ -53,7 +53,7 @@ function getExtractingMoonData() {
     });
 }
 
-function Test2() {
+function getMoonInfo() {
   let getValues = getMaterialValuesPromise();
   let getData = getExtractingMoonData();
   let getDataToday = getData.then(moonData => moonData.filter(moon => moon.hrsRemaining < 24));
@@ -284,5 +284,5 @@ module.exports = {
   GetInactiveMoons:GetInactiveMoons,
   Announce:Announce,
   GetOrePrices:getOwnedOrePrices,
-  Test:Test
+  GetExtractingMoonData:getMoonInfo
 };
