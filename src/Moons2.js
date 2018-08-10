@@ -65,7 +65,7 @@ function getMoonInfo() {
 
   return Promise.join(getValues, getDataToday, (values, moonData) => {
 
-    moonData.map(data => {
+    return moonData.map(data => {
       let ores = moonJson
         .filter(json => json.name === data.moon.name)
         .map(json => { 
