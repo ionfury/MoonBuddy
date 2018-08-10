@@ -67,7 +67,7 @@ function iskM3(price, vol) {
   let p = Number.parseFloat(price);
   let v = Number.parseFloat(vol);
 
-  return Utilities.FormatNumberForDisplay(p / v );
+  return Utilities.FormatNumberForDisplay(p / v);
 }
 
 function getOwnedOrePrices() {
@@ -84,8 +84,8 @@ function getOwnedOrePrices() {
         prices.forEach(price => {
           value+= ore[price.name] * price.buy;
         });
-        value = value / ore.Required;
-        return `${ore.Name}: ${iskM3(value, ore.Volume)}`;
+        value = value / ore.Required * 0.89;
+        return `${ore.Ore}: ${iskM3(value, ore.Volume)}`;
       }).join('\n');
     });
 

@@ -1,5 +1,5 @@
 {
-  "helpMessage":"\n!help - shows this message\n!owned [search] - displays SUAD owned moons containing [search]\n!schedule [search] - displays extraction schedule containing [search]\n!inactive - displays moons which are not scheduled or active.",
+  "helpMessage":"\n!help - shows this message\n!owned [search] - displays SUAD owned moons containing [search]\n!schedule [search] - displays extraction schedule containing [search]\n!inactive - displays moons which are not scheduled or active.\n!orePrices - displays all current ore prices at jita buy value & 89.3% reprocessing",
   "url":"https://esi.tech.ccp.is",
   "server":"latest",
   "prefix": "!",
