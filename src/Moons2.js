@@ -96,6 +96,7 @@ function getMoonInfo() {
 function Scheduled(search) {
   let re = new RegExp(search, 'i');
   return getMoonInfo()
+    .then(moons => moons.sort((a, b) => (Number.parseFloat(a.remaining) - Number.parseFloat(b.remaining))))
     .then(formatMoonInfo)
     .then(items => items.filter(item => re.test(item)))
     .then(strings => strings.join('\n'));
