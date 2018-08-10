@@ -60,7 +60,7 @@ function getMoonInfo() {
   console.log('getMoonInfo');
   let getValues = getMaterialValuesPromise();
   let getData = getExtractingMoonData();
-  let getDataToday = getData.then(moonData => moonData.filter(moon => moon.hrsRemaining < 24));
+  let getDataToday = getData;//.then(moonData => moonData.filter(moon => moon.hrsRemaining < 24));
   let moonJson = Config.moons;
 
   return Promise.join(getValues, getDataToday, (values, moonData) => {
