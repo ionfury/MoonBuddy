@@ -85,9 +85,20 @@ const esiGet = (options) => {
   return RequestPromise(options);
 }
 
+function getFuzzworkMarketDataPromise(stationID, typeID) {
+
+  var options = {
+    method: 'GET',
+    url: `https://market.fuzzwork.co.uk/aggregates/?station=${stationID}&types=${typeID}`
+  }
+
+  return RequestPromise(options);
+}
+
 module.exports = {
   AuthToken: authToken,
   VerifyToken: verifyToken,
   RefreshToken: refreshToken,
+  GetFuzzworkMarketDataPromise: getFuzzworkMarketDataPromise,
   EsiGet: esiGet
 }

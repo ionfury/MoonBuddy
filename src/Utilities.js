@@ -49,7 +49,7 @@ function formatNumberForDisplay(number) {
   let pretty = ``;
 
   if(length <= 3)
-    pretty = number.toString();
+    pretty = Math.round(number).toString();
   else if(4 <= length && length <= 6)
     pretty = `${Math.round(number/1000 * 10) / 10}k`; //thousands
   else if(7 <= length && length <= 9)

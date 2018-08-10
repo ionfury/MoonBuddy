@@ -9,7 +9,8 @@ module.exports = {
   GetObserversPromise:getObserversPromise,
   GetObservedPromise:getObservedPromise,
   GetUniqueVolumesPromise:getUniqueVolumesPromise,
-  GetObserverStructuresPromise:getObserverStructuresPromise
+  GetObserverStructuresPromise:getObserverStructuresPromise,
+  GetMarketHubInfo:getMarketHubInfo
 }
 
 /**
@@ -112,5 +113,82 @@ function getObserverStructuresPromise(accessTokenPromise, observersPromise) {
           .then(JSON.parse)));
 
     return Promise.all(promises);
+  });
+}
+
+function getTypeInfoPromise(typeID) {
+  let options = {
+    route: `universe/types/${typeID}`
+  };
+
+  return Api.EsiGet(options).then(JSON.parse);
+}
+
+function getItemIDStrictPromise(item) {
+  let options = {
+    route:'search',
+    parameters: `categories=inventory_type&search=${item}&strict=true`
+  }
+
+  return Api.EsiGet(options)
+    .then(JSON.parse)
+    .then(res => {
+      if(!res.inventory_type) 
+        return getItemIDPromise(item);
+      else
+        return res.inventory_type.shift();
+    });
+}
+
+function getItemIDPromise(item) {
+  let options = {
+    route:'search',
+    parameters: `categories=inventory_type&search=${item}`
+  }
+
+  return Api.EsiGet(options)
+    .then(JSON.parse)
+    .then(res => {
+      if(!res.inventory_type) 
+        throw new Error(`Inventorytype not found for '${item}'!`);
+      else
+        return res.inventory_type.shift();
+    });
+}
+
+
+function getMarketHubInfo(system, item) {
+  var stationID = 0;
+  switch(system) {
+    case 'jita':
+      stationID = 60003760;
+      break;
+    case 'amarr':
+      stationID = 60008494;
+      break;
+    case 'dodixie':
+      stationID = 60011866;
+      break;
+    case 'rens':
+      stationID = 60004588;
+      break;
+    case 'hek':
+      stationID = 60005686;
+      break;
+  }
+  let getItemID = getItemIDStrictPromise(item);
+  let getTypeInfo = getItemID.then(getTypeInfoPromise);
+  let getFuzzworkMarketData = getItemID.then(itemID => Api.GetFuzzworkMarketDataPromise(stationID, itemID).then(JSON.parse));
+
+  return Promise.join(getTypeInfo, getFuzzworkMarketData, (typeInfo, marketData) => {
+    return {
+      name: typeInfo.name,
+      id: typeInfo.type_id,
+      volume: typeInfo.volume,
+      buy: marketData[typeInfo.type_id].buy.max,
+      buyVolume: marketData[typeInfo.type_id].buy.volume,
+      sell: marketData[typeInfo.type_id].sell.min,
+      sellVolume: marketData[typeInfo.type_id].sell.volume
+    };
   });
 }

@@ -1,5 +1,5 @@
 {
-  "helpMessage":"\n!help - shows this message\n!owned [search] - displays SUAD owned moons containing [search]\n!schedule [search] - displays extraction schedule containing [search]\n!inactive - displays moons which are not scheduled or active.",
+  "helpMessage":"\n!help - shows this message\n!owned [search] - displays SUAD owned moons containing [search]\n!schedule [search] - displays extraction schedule containing [search]\n!inactive - displays moons which are not scheduled or active.\n!values [search] - displays all current ore prices at jita buy value & 89.3% reprocessing containing search",
   "url":"https://esi.tech.ccp.is",
   "server":"latest",
   "prefix": "!",
@@ -29,7 +29,7 @@
     { "ore": "Bitumens", "types": [ 46284, 45492, 46285 ] },
     { "ore": "Chromite", "types": [ 45501, 46302, 46303 ] } 
   ],
-
+  "materials": [ "Tritanium", "Pyerite", "Mexallon", "Isogen","Nocxium","Zydrine","Megacyte","Morphite","Heavy Water","Liquid Ozone","Helium Isotopes","Strontium Clathrates","Hydrocarbons","Atmospheric Gases","Evaporite Deposits","Silicates","Tungsten","Titanium","Scandium","Cobalt","Chromium","Vanadium","Cadmium","Platinum","Mercury","Caesium","Hafnium","Technetium","Dysprosium","Neodymium","Promethium","Thulium","Oxygen Isotopes","Nitrogen Isotopes","Hydrogen Isotopes"], 
   "moons":
   [
     {"name":"XKZ8-H I - Moon 1","product":"Cubic Bistot","quantity":"0.2912503183","typeID":"46676","solarSystemID":"30003119","planetID":"40198035","moonID":"40198036"},
