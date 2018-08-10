@@ -64,6 +64,11 @@ Client.on('message', msg => {
       Moons.Announce()
         .then(moons => msg.channel.send(moons))
         .catch(err => msg.channel.send(`:x: ${err}`));
+      break;
+    case "test":
+      Moons.GetExtractingMoonData()
+        .then(moonData => moonData.forEach(moon => console.log(moon)));
+      break;
   }
 });
 

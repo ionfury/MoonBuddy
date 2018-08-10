@@ -11,11 +11,8 @@ let Reprocessing = require('../reprocessing.json');
 let MINING_DURATION_DAYS = 25;
 let EXTRACTION_AMOUNT_PER_HOUR = 20000;
 
-function Announce() 
-{
-  let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
-  let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
-  let getValues = Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
+function getMaterialValuesPromise() {
+  return Promise.map(Config.materials, mat => Accessors.GetMarketHubInfo('jita', mat))
     .then(prices => {
       return Reprocessing
         .map(ore => {
@@ -30,11 +27,64 @@ function Announce()
           };
         });
     });
+}
+
+function getExtractingMoonData() {
+  let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
+  let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
+
+  return getExtractions
+    .then(extractions => {
+      let extractingMoonIds = extractions.map(extraction => extraction.moon_id.toString());
+      
+      let moonJson = Config.moons;
+      
+      let extractingMoons = moonJson.filter(moon => extractingMoonIds.indexOf(moon.moonID) >= 0);
+      let uniqueMoonIds = Array.from(new Set(extractingMoons.map(moon => moon.moonID)));
+
+      return uniqueMoonIds.map(moonID => {
+        let moon = moonJson.filter(moon => moon.moonID == moonID)[0];
+        let moonExtraction = extractions.filter(extraction => extraction.moon_id == moonID)[0];
+        let chunkArrivalTime = new Date(moonExtraction.chunk_arrival_time);
+        let now = new Date();
+        var diff = new DateDiff(chunkArrivalTime, now);
+        return { "moonExtraction": moonExtraction, "moon": moon, "hrsRemaining": diff.hours() };
+      });
+    });
+}
+
+function Test2() {
+  let getValues = getMaterialValuesPromise();
+  let getData = getExtractingMoonData();
+  let getDataToday = getData.then(moonData => moonData.filter(moon => moon.hrsRemaining < 24));
+
+  return Promise.join(getValues, getDataToday, (values, moonData) => {
+
+    moonData.map(data => {
+      let ores = moonJson
+        .filter(json => json.name === data.moon.name)
+        .map(json => { 
+          return {
+            'product':json.product, 
+            'quantity':json.quantity,
+            'iskm3': values.find(a => a.name === json.product).value
+          }});
+
+      return {
+        'name': data.moon.name,
+        'hrsRemaining': data.hrsRemaining,
+        'ores': ores
+      };
+    });    
+  });
+}
+
+function Announce() 
+{
+  let getAccessToken = Accessors.GetAccessTokenPromise(process.env.refresh_token);
+  let getExtractions = getAccessToken.then(Accessors.GetExtractionsPromise);
+  let getValues = getMaterialValuesPromise();
   return Promise.join(getValues, getExtractions, (values, extractions) => {
-
- // });
-
-  //return getExtractions.then(extractions => {
     let extractingMoonIds = extractions.map(extraction => extraction.moon_id.toString());
     let moonJson = Config.moons;
     
