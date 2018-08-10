@@ -93,33 +93,33 @@ function getMoonInfo() {
 }
 
 function Announce2() {
-  console.log('Announce2');
-
   return getMoonInfo()
     .then(moons => moons.filter(moon => moon.hrsRemaining < 24))
-    .then(moons => {
-      let string = '';
+    .then(formatMoonInfo);
+}
 
-      let valubleOres = moons.map(moon => moon.ores);
-      valubleOres = [].concat.apply([], valubleOres)
-        .filter(ore => ore.value/ore.volume > BUYBACK_PRICE);
-      
-      if(valubleOres.length > 0) {
-        string += `\n@everyone:\n The corp needs you to contract the following ores to corp @ 350 isk/m3: `;
-        string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
-      }
+function formatMoonInfo(moons) {
+  let string = '';
 
-      moons.forEach(moon => {
-        string += '\n```';
-        string += `${moon.name}:`;
-        moon.ores.forEach(ore => {
-          string += `\n\t${formatProduct(ore.quantity, moon.hrsTotal, ore.product, ore.value, ore.volume)}`;
-        });
-        string += '```';
-      });
+  let valubleOres = moons.map(moon => moon.ores);
+  valubleOres = [].concat.apply([], valubleOres)
+    .filter(ore => ore.value/ore.volume > BUYBACK_PRICE);
+  
+  if(valubleOres.length > 0) {
+    string += `\n@everyone:\n The corp needs you to contract the following ores to corp @ 350 isk/m3: `;
+    string += valubleOres.map(ore => `**${ore.product}**`).join(', ');
+  }
 
-      return string;
+  moons.forEach(moon => {
+    string += '\n```';
+    string += `${moon.name}:`;
+    moon.ores.forEach(ore => {
+      string += `\n\t${formatProduct(ore.quantity, moon.hrsTotal, ore.product, ore.value, ore.volume)}`;
     });
+    string += '```';
+  });
+
+  return string;
 }
 
 function formatProduct(quantity, hrsTotal, product, value, volume) {
