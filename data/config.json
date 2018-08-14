@@ -1,11 +1,11 @@
 {
   "help_messages": 
   [
-    "!help - shows this message",
-    "!owned [search] - displays SUAD owned moons containing [search]",
-    "!schedule [search] - displays extraction schedule containing [search]",
-    "!values [search] - displays all current ore prices at jita buy value & 89.3% reprocessing containing [search]",
-    "!inactive - displays moons which are not scheduled or active."
+    "help - shows this message",
+    "owned [search] - displays SUAD owned moons containing [search]",
+    "schedule [search] - displays extraction schedule containing [search]",
+    "values [search] - displays all current ore prices at jita buy value & 89.3% reprocessing containing [search]",
+    "inactive - displays moons which are not scheduled or active."
   ],  
   "url":"https://esi.tech.ccp.is",
   "server":"latest",
@@ -15,7 +15,9 @@
   "extraction_amount_per_hour": 20000,
   "buyback_minimum": 500,
   "buyback_price": 450,
+  "buyback_system": "XKZ8-H",
   "refine_rate": 0.89,
   "ore_value_multiplier": 1.00,
-  "tax_rate": 10
+  "tax_rate": 10,
+  "notification_channel": "moon-notifications"
 }

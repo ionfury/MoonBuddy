@@ -6,31 +6,22 @@ global.include = function(file) {
   return require(this.abs_path('/' + file));
 }
 
-
 let Discord = require(`discord.js`);
 let Promise = require('bluebird');
-//let Chunk = require('node-text-chunk');
 let Client = new Discord.Client();
-let Moons = require(`./src/Moons2.js`);
 let Config = require(`./config.json`);
-let Utilities = require(`./src/Utilities.js`);
 let Schedule = require('cron-scheduler');
-
-const DISCORD_MESSAGE_LENGTH = 1800;
-
-function Announce()
-{
-}
-
-function ScheduleDailyNotifications() {
-
-}
+let Commands = include('src/commands.js');
+let Utilities = include('src/utilities.js');
+let Messages = include('src/messages.js');
 
 Client.on('ready', () => {
   Schedule({ on: '0 * * * *'}, function () {
-    return Moons.Announce(1).then(moons => Client.channels.find("name", "moon-notifications").send(moons))
+    return Commands.ScheduledHours(1)
+      .then(m => Client.channels.find('name', Config.notification_channel).send(m))
+      .catch(console.log);
   });
-  console.log(`\nBot has started, with ${Client.users.size} users, in ${Client.channels.size} channels of ${Client.guilds.size} guilds.`); 
+  console.log(Messages.Startup(Client.users.size, Client.channels.size, Client.guilds.size));
 });
 
 Client.on('message', msg => {
@@ -39,42 +30,46 @@ Client.on('message', msg => {
   
   var args = msg.content.slice(Config.prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
-  var search = '';
+  var param = '';
   if(args.length > 0)
-    search = args.shift().toLowerCase();
+    param = args.shift().toLowerCase();
   console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
   switch(command)
   {
-    case "help":
-      msg.channel.send(`\`\`\`${Config.helpMessage}\`\`\``);
+    case 'help':
+      Commands.Help()
+        .then(msg.channel.send)
+        .catch(err => msg.channel.send(`:x: ${err}`));
       break;
-    case "owned":
-      Moons.GetOwnedMoons(search)
-        .then(moons => Utilities.SplitString(moons,DISCORD_MESSAGE_LENGTH))
-        .then(messages => messages.forEach(message => msg.author.send(`\`\`\`${message}\`\`\``)))
-        .catch(err => msg.author.send(`:x: ${err}`));
+    case 'owned':
+      Commands.Owned(param)
+        .then(Utilities.SplitString)
+        .then(msg.author.send)
+        .catch(err => msg.channel.send(`:x: ${err}`));
       break;
-    case "inactive":
-      Moons.GetInactiveMoons()
-        .then(moons => msg.author.send(moons))
-        .catch(err =>  msg.author.send(`:x: ${err}`));
+    case 'inactive':
+      Commands.Inactive(param)
+        .then(Utilities.SplitString)
+        .then(msg.author.send)
+        .catch(err => msg.channel.send(`:x: ${err}`));
       break;
-    case "schedule":
-      Moons.GetScheduledMoons(search)
-        .then(moons => Utilities.SplitString(moons,DISCORD_MESSAGE_LENGTH))
-        .then(messages => messages.forEach(message => msg.author.send(message)))
-        .catch(err =>  msg.author.send(`:x: ${err}`));
+    case 'schedule':
+      Commands.Schedule(param)
+        .then(Utilities.SplitString)
+        .then(msg.author.send)
+        .catch(err => msg.channel.send(`:x: ${err}`));
       break;
-    case "values":
-      Moons.GetOrePrices(search)
-        .then(prices => Utilities.SplitString(prices,DISCORD_MESSAGE_LENGTH))
-        .then(messages => messages.forEach(message => msg.author.send(`\`\`\`${message}\`\`\``)))
-        .catch(err =>  msg.author.send(`:x: ${err}`));
+    case 'values':
+      Commands.Values(param)
+        .then(Utilities.SplitString)
+        .then(msg.author.send)
+        .catch(err => msg.channel.send(`:x: ${err}`));
       break;
-    case "announce":
-      Moons.Announce(24)
-        .then(moons => msg.channel.send(moons))
+    case 'announce':
+      Commands.ScheduledHours(param)
+        .then(Utilities.SplitString)
+        .then(msg.author.send)
         .catch(err => msg.channel.send(`:x: ${err}`));
       break;
   }

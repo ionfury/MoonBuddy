@@ -42,7 +42,7 @@ module.exports = {
             moon: moon,
             hrsTotal: hrsTotal.hours(),
             hrsRemaining: hrsRemaining.hours()
-          }
+          };
         });
       });
   },
@@ -53,7 +53,7 @@ module.exports = {
    */
   ExtractingOres = () => {
     let orePromise = OreValue.Get('jita');
-    let extractingPromise = this.Extracting();
+    let extractingPromise = module.exports.Extracting();
 
     return Promise.join(orePromise, extractingPromise, (values, moonData) => {
       return moonData.map(data => {
@@ -66,7 +66,8 @@ module.exports = {
               quantity: m.quantity,
               value: item.value,
               volume: item.volume
-          }});
+            };
+          });
 
         return {
           name: data.moon.name,
@@ -80,14 +81,50 @@ module.exports = {
 
   Inactive = () => {
     let tokenPromise = Esi.RefreshToken(process.env.refresh_token);
-    let extractionsPromise = tokenPromise.then(Extractions.Get);
+    //let extractionsPromise = tokenPromise.then(Extractions.Get);
     let observersPromise = tokenPromise.then(Observers.Get);
+    let observedPromise = tokenPromise.then(Observers.GetObserved);
     let observerStructuresPromise = Observers.GetStructures(tokenPromise, observersPromise);
 
-    return Promise.join(observerStructuresPromise, extractionsPromise, (observerStructuresPromise, extractions) => {
-      console.log(observerStructures, extractions);
+    return Promise.join(observerStructuresPromise, observedPromise, (structures, observed) => {
+      console.log(structures, observed);
 
+      let extracted = {}; //get distinct observed structures
+      
+      let notExtracting = extracted.filter(s => structures.some(i => i == s));
+
+      
+            
       return 'Not Implemented!';
+    });
+  },
+
+  Owned = (search) => {
+    let tokenPromise = Esi.RefreshToken(process.env.refresh_token);
+    let extractionsPromises = tokenPromise.then(Extractions.Get);
+
+    return extractionsPromise.then(extractions => {
+      let extractingMoons = Array.from(new Set(Moons.map(m => {
+        return {
+          name = m.name,
+          extracting = extractions.some(e => e.moon_id === m.moonID)
+        };
+      })));
+
+      let moons = extractingMoons.map(m => {
+        let ores = Moons
+          .filter(i => i.name === m.name)
+          .map(i => { return { product: i.product, quantity: i.quantity }});
+
+        return { name:m.name, extracting: m.extracting, ores: ores };
+      });
+
+      if(search != '') {
+        let re = new RegExp(search, 'i');
+        moons = moons.filter(i => re.test(i.ToString));
+      }
+      
+      return moons;
     });
   }
 }

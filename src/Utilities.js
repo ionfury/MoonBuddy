@@ -20,7 +20,7 @@ module.exports = {
   /**
    * 
    */
-  SplitString = (string, size) => {
+  SplitString = (string, size = 1800) => {
     let splitStrings = new Array();
   
     let newline = '\n';
@@ -44,7 +44,10 @@ module.exports = {
   
     return splitStrings;
   },
-  
+
+  /**
+   * 
+   */
   PrettyNumber = (number) => {
     let length = Math.round(number).toString().length;
     let pretty = ``;

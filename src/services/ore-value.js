@@ -30,8 +30,8 @@ module.exports = {
               name: ore.Ore,
               value: value,
               volume: ore.Volume
-            }
-          })
-      })
+            };
+          });
+      });
   }
 }
