@@ -1,7 +1,7 @@
 let Promise = require('bluebird');
 
-let Types = require('../repositories/Types.js');
-let Fuzzwork = require('../repositories/Fuzzwork.js');
+let Types = require('../repositories/types.js');
+let Fuzzwork = require('../repositories/fuzzwork.js');
 
 module.exports = {
   /**
