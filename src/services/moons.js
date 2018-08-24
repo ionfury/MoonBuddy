@@ -104,8 +104,8 @@ module.exports = {
     return extractionsPromise.then(extractions => {
       let extractingMoons = Array.from(new Set(Moons.map(m => {
         return {
-          name = m.name,
-          extracting = extractions.some(e => e.moon_id === m.moonID)
+          name: m.name,
+          extracting: extractions.some(e => e.moon_id === m.moonID)
         };
       })));
 

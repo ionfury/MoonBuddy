@@ -1,6 +1,6 @@
 let RequestPromise = require('request-promise');
 
-let Config = include('data/config.json');
+let Config = require('../../data/config.json');
 
 module.exports = {
 /**
@@ -78,12 +78,12 @@ module.exports = {
     let server = options.server || Config.server;
     let url = options.url || Config.url;
 
-    let options = {
+    let req = {
       method: 'GET',
       url: `${url}/${server}/${route}?datasource=${datasource}&page=${page}&token=${token}&${parameters}`
     }
     
-    return RequestPromise(options);
+    return RequestPromise(req);
   }
 }
 

@@ -4,13 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "test",
+    "test": "mocha",
     "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.1",
+    "chai": "^4.1.2",
     "cron-scheduler": "^1.2.0",
     "date-diff": "^0.2.0",
     "dateformat": "^3.0.2",
@@ -20,5 +21,8 @@
     "node-text-chunk": "^0.1.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }
