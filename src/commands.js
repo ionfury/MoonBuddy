@@ -1,5 +1,6 @@
 let Promise = require('bluebird');
 
+let Config = require('../data/config.json')
 let Moons = require('./services/moons.js');
 let OreValue = require('./services/ore-value.js');
 let Formatters = require('./formatters.js');
