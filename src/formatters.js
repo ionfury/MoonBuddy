@@ -19,7 +19,7 @@ module.exports = {
             m.extracting, 
             m.name,
             m.ores.map(o =>
-              OrePercent(
+              Messages.OrePercent(
                 o.name,
                 o.quantity
             ))
@@ -44,7 +44,7 @@ module.exports = {
       .map(o => o.product);
   
     if(valubleOres.length > 0)
-      string.push(`${Messages.Alert(Config.buyback_price, valubleOres)}`);
+      strings.push(`${Messages.Alert(Config.buyback_price, valubleOres)}`);
   
     strings.push(`${Messages.Reminder(Config.tax_rate, Config.buyback_system)}`);
     
@@ -72,6 +72,6 @@ module.exports = {
   },
 
   InactiveMoons: (moons) => {
-    
+
   }
 }
