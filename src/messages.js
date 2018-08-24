@@ -20,7 +20,7 @@ module.exports = {
     `The following structures are not extracting: ${names.join(', ')}!`,
   
   OrePercent: (ore, pcnt) => 
-    `${ore}: ${Math.rount(pcnt*100,2)}%`,
+    `${ore}: ${Math.round(pcnt*100,2)}%`,
   
   OreValue: (qty, hrs, prd, val, vol, rate) => 
     `${Utilities.PrettyNumber(qty*hrs*rate)} m3 ${prd} (${Utilities.PrettyNumber(val/vol)} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol)} isk total)`,
