@@ -31,46 +31,45 @@ Client.on('message', msg => {
   {
     case 'help':
       msg.channel.send(Commands.Help())
-        .catch(err => dump(err, msg.channel.send, console.log));
+        .catch(err => msg.channel.send(dump(err)));
       break;
     case 'owned':
       Commands.Owned(param)
         .then(Utilities.SplitString)
         .then(msg.author.send)
-        .catch(err => dump(err, msg.channel.send, console.log));
+        .catch(err => msg.channel.send(dump(err)));
       break;
     case 'inactive':
       Commands.Inactive(param)
         .then(Utilities.SplitString)
         .then(msg.author.send)
-        .catch(err => dump(err, msg.channel.send, console.log));
+        .catch(err => msg.channel.send(dump(err)));
       break;
     case 'schedule':
       Commands.Schedule(param)
         .then(Utilities.SplitString)
         .then(msg.author.send)
-        .catch(err => dump(err, msg.channel.send, console.log));
+        .catch(err => msg.channel.send(dump(err)));
       break;
     case 'values':
       Commands.Values(param)
         .then(Utilities.SplitString)
         .then(msg.author.send)
-        .catch(err => dump(err, msg.channel.send, console.log));
+        .catch(err => msg.channel.send(dump(err)));
       break;
     case 'announce':
       Commands.ScheduledHours(param)
         .then(Utilities.SplitString)
         .then(msg.author.send)
-        .catch(err => dump(err, msg.channel.send, console.log));
+        .catch(err => msg.channel.send(dump(err)));
       break;
   }
 });
 
 Client.login(process.env.token);
 
-function dump(err, pub, priv) {
-  if(err.message)
-    pub(`:x: ${err.message}`);
-  if(err.stack)
-    priv(err.stack);
+function dump(err) {
+  console.log(err.stack);
+
+  return `:x: ${err.message}`;
 }
