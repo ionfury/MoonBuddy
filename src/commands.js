@@ -1,4 +1,4 @@
-let Promise = require('bluebird.js');
+let Promise = require('bluebird');
 
 let Moons = include('src/services/moons.js');
 let OreValues = include('src/services/ore-values.js');
