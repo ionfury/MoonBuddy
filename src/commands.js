@@ -9,7 +9,7 @@ module.exports = {
    * Displays the help messages defined in config.
    * @returns A promise returning a string.
    */
-  Help = () => {
+  Help: () => {
     return Promise.promisify(Config.help_messages.map(m => `${Config.prefix}${m}`).join('\n'));
   },
   /**
