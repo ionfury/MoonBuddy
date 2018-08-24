@@ -18,7 +18,7 @@ module.exports = {
   Owned: (search) => {
     let re = new RegExp(search, 'i');
     return Moons.Owned()
-      .then(m => m.filter(i => re.test(i.ToString())))
+      .then(m => m.filter(i => re.test(JSON.stringify(i))))
       .then(Formatters.OwnedMoons);
   },
   /**
@@ -26,7 +26,7 @@ module.exports = {
    * @returns A promise returning a string.
    */
   Inactive: (search) => {
-    return Moons.Inactive()
+    return Moons.Inactive(search)
       .then(Formatters.InactiveMoons);
   },
   /**
@@ -36,7 +36,7 @@ module.exports = {
   Schedule: (search) => {
     let re = new RegExp(search, 'i');
     return Moons.ExtractingOres()
-      .then(m => m.filter(i => re.test(i.ToString())))
+      .then(m => m.filter(i => re.test(JSON.stringify(i))))
       .then(sortMoonsByArrival)
       .then(Formatters.ExtractingOres);
   },
@@ -46,7 +46,7 @@ module.exports = {
    */
   ScheduledHours: (hours = 24) => {
     return Moons.ExtractingOres()
-      .then(m => m.filter(i => r.hrsRemaining < hours))
+      .then(m => m.filter(i => i.hrsRemaining < hours))
       .then(sortMoonsByArrival)
       .then(Formatters.ExtractingOres);
   },
@@ -57,7 +57,7 @@ module.exports = {
   Values: (search) => {
     let re = new RegExp(search, 'i');
     return OreValue.Get('jita')
-      .then(o => o.filter(i => re.test(i.ToString())))
+      .then(o => o.filter(i => re.test(JSON.stringify(i))))
       .then(Formatters.OreValue);
   }
 }
