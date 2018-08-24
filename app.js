@@ -1,19 +1,11 @@
-global.base_dir = __dirname;
-global.abs_path = function(path) {
-  return base_dir + path;
-}
-global.include = function(file) {
-  return require(this.abs_path('/' + file));
-}
-
 let Discord = require(`discord.js`);
 let Promise = require('bluebird');
 let Client = new Discord.Client();
 let Config = require(`./data/config.json`);
 let Schedule = require('cron-scheduler');
-let Commands = include('src/commands.js');
-let Utilities = include('src/utilities.js');
-let Messages = include('src/messages.js');
+let Commands = require('./src/commands.js');
+let Utilities = require('./src/utilities.js');
+let Messages = require('./src/messages.js');
 
 Client.on('ready', () => {
   Schedule({ on: '0 * * * *'}, function () {

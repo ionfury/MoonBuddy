@@ -1,4 +1,4 @@
-let Utilities = include('src/utilities.js');
+let Utilities = require('./utilities.js');
 
 module.exports = {
   Alert: (rate, ores) => 

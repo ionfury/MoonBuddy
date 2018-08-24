@@ -1,8 +1,8 @@
 let Promise = require('bluebird');
 
-let Moons = include('src/services/moons.js');
-let OreValues = include('src/services/ore-values.js');
-let Formatters = include('src/formatters.js');
+let Moons = require('./services/moons.js');
+let OreValues = require('./services/ore-values.js');
+let Formatters = require('./formatters.js');
 
 module.exports = {
   /**

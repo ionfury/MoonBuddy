@@ -1,6 +1,6 @@
-let Config = include('data/config.json');
+let Config = require('../data/config.json');
 
-let Messages = include('src/messages.js');
+let Messages = require('./messages.js');
 
 module.exports = {
   /**
