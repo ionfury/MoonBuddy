@@ -1,7 +1,7 @@
 let Promise = require('bluebird');
 
 let Moons = require('./services/moons.js');
-let OreValues = require('./services/ore-values.js');
+let OreValue = require('./services/ore-value.js');
 let Formatters = require('./formatters.js');
 
 module.exports = {
@@ -57,9 +57,9 @@ module.exports = {
    */
   Values: (search) => {
     let re = new RegExp(search, 'i');
-    return OreValues.Get('jita')
+    return OreValue.Get('jita')
       .then(o => o.filter(i => re.test(i.ToString())))
-      .then(Formatters.OreValues);
+      .then(Formatters.OreValue);
   }
 }
 
