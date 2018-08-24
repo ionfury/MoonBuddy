@@ -1,5 +1,3 @@
-let Promise = require('bluebird');
-
 let Config = require('../data/config.json')
 let Moons = require('./services/moons.js');
 let OreValue = require('./services/ore-value.js');
@@ -11,7 +9,7 @@ module.exports = {
    * @returns A promise returning a string.
    */
   Help: () => {
-    return Promise.promisify(Config.help_messages.map(m => `${Config.prefix}${m}`).join('\n'));
+    return Config.help_messages.map(m => `${Config.prefix}${m}`).join('\n');
   },
   /**
    * Displays all moons and products from data/eve/moons.json and if they are extracting.

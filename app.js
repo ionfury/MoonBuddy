@@ -30,8 +30,7 @@ Client.on('message', msg => {
   switch(command)
   {
     case 'help':
-      Commands.Help()
-        .then(msg.channel.send)
+      msg.channel.send(Commands.Help())
         .catch(err => msg.channel.send(`:x: ${err}`));
       break;
     case 'owned':

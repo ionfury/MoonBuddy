@@ -72,6 +72,6 @@ module.exports = {
   },
 
   InactiveMoons: (moons) => {
-
+    
   }
 }
