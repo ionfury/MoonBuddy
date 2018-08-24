@@ -92,8 +92,6 @@ module.exports = {
       let extracted = {}; //get distinct observed structures
       
       let notExtracting = extracted.filter(s => structures.some(i => i == s));
-
-      
             
       return 'Not Implemented!';
     });
