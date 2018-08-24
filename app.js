@@ -4,7 +4,7 @@ let Client = new Discord.Client();
 let Config = require(`./data/config.json`);
 let Schedule = require('cron-scheduler');
 let Commands = require('./src/commands.js');
-let Utilities = require('./src/utilities.js');
+let Utilities = require('./src/utils.js');
 let Messages = require('./src/messages.js');
 
 Client.on('ready', () => {
