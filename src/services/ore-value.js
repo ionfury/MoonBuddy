@@ -17,7 +17,7 @@ module.exports = {
    *  }
    * ]
    */
-  Get = (market = 'jita') => {
+  Get: (market = 'jita') => {
     return Promise.map(Materials, material => MarketData.Get(material, market))
       .then(prices => {
         return Reprocessing

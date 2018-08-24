@@ -18,7 +18,7 @@ module.exports = {
    *    sellVolume: float
    *  }
    */
-  Get = (item, system = 'jita') => {
+  Get: (item, system = 'jita') => {
     let stationId = 0;
     switch(system) {
       case 'jita':

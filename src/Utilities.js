@@ -3,7 +3,7 @@ module.exports = {
   /**
    * 
    */
-  DifferenceInDays = (d0, d1) => {
+  DifferenceInDays: (d0, d1) => {
     // Copy dates so don't affect originals
     d0 = new Date(+d0);
     d1 = new Date(+d1);
@@ -20,7 +20,7 @@ module.exports = {
   /**
    * 
    */
-  SplitString = (string, size = 1800) => {
+  SplitString: (string, size = 1800) => {
     let splitStrings = new Array();
   
     let newline = '\n';
@@ -48,7 +48,7 @@ module.exports = {
   /**
    * 
    */
-  PrettyNumber = (number) => {
+  PrettyNumber: (number) => {
     let length = Math.round(number).toString().length;
     let pretty = ``;
   

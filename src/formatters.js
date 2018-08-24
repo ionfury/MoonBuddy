@@ -6,7 +6,7 @@ module.exports = {
   /**
    * 
    */
-  OwnedMoons = (moons) => {
+  OwnedMoons: (moons) => {
     if(moons.length < 1)
       return '';
   
@@ -31,7 +31,7 @@ module.exports = {
   /**
    * 
    */
-  ExtractingOres = (moons) => {
+  ExtractingOres: (moons) => {
     if(moons.length < 1)
       return '';
   
@@ -67,11 +67,11 @@ module.exports = {
       return strings.join('\n');
   },
 
-  OreValues = (ores) => {
+  OreValues: (ores) => {
     return ores.map(o => Messages.Value(o.name, o.value, o.volume)).join('\n');
   },
 
-  InactiveMoons = (moons) => {
+  InactiveMoons: (moons) => {
 
   }
 }

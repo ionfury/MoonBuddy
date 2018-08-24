@@ -18,7 +18,7 @@ module.exports = {
    *  }
    * ]
    */
-  Extracting = () => {
+  Extracting: () => {
     let tokenPromise = Esi.RefreshToken(process.env.refresh_token);
     let extractionsPromise = tokenPromise.then(Extractions.Get);
 
@@ -51,7 +51,7 @@ module.exports = {
    * Gets a promise yielding Extraction and ore info
    * @returns a promise
    */
-  ExtractingOres = () => {
+  ExtractingOres: () => {
     let orePromise = OreValue.Get('jita');
     let extractingPromise = module.exports.Extracting();
 
@@ -79,7 +79,7 @@ module.exports = {
     });
   },
 
-  Inactive = () => {
+  Inactive: () => {
     let tokenPromise = Esi.RefreshToken(process.env.refresh_token);
     //let extractionsPromise = tokenPromise.then(Extractions.Get);
     let observersPromise = tokenPromise.then(Observers.Get);
@@ -97,7 +97,7 @@ module.exports = {
     });
   },
 
-  Owned = (search) => {
+  Owned: (search) => {
     let tokenPromise = Esi.RefreshToken(process.env.refresh_token);
     let extractionsPromises = tokenPromise.then(Extractions.Get);
 

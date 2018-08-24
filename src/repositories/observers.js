@@ -9,7 +9,7 @@ module.exports = {
    * @param {string} accessToken The access token.
    * @returns A RequestPromise.
    */
-  Get = (token) => {
+  Get: (token) => {
     return Esi.Get({
       token:accessToken, 
       route:`corporation/${Config.corporation_id}/mining/observers/`
@@ -22,7 +22,7 @@ module.exports = {
    * @param {Promise} observersPromise the observers promise.
    * @returns A RequestPromise.
    */
-  GetObserved = (tokenPromise, observersPromise) => {
+  GetObserved: (tokenPromise, observersPromise) => {
     return Promise.join(tokenPromise, observersPromise, (token, observers) => {
       var promises = [];
       
@@ -42,7 +42,7 @@ module.exports = {
    * @param {*Promise} observersPromise the observers promise.
    * @returns A Promise.
    */
-  GetStructures = (tokenPromise, observersPromise) => {
+  GetStructures: (tokenPromise, observersPromise) => {
     return Promise.join(tokenPromise, observersPromise, (accessToken, observers) => {
       var promises = [];
   

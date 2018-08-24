@@ -8,7 +8,7 @@ module.exports = {
  * @param {string} token The code.
  * @returns A RequestPromise.
  */
-  AuthToken = (token) => {
+  AuthToken: (token) => {
     let options = {
       method: 'POST',
       url: "https://login.eveonline.com/oauth/token",
@@ -30,7 +30,7 @@ module.exports = {
  * @param {string} token The the refresh token.
  * @returns a RequestPromise.
  */
-  RefreshToken = (token) => {
+  RefreshToken: (token) => {
     let options = {
       method: 'POST',
       url: "https://login.eveonline.com/oauth/token",
@@ -52,7 +52,7 @@ module.exports = {
  * @param {string} token Verification token
  * @returns a RequestPromise.
  */
-  VerifyToken = (token) => {
+  VerifyToken: (token) => {
     let options = {
       method: 'GET',
       url: "https://login.eveonline.com/oauth/verify",
@@ -69,7 +69,7 @@ module.exports = {
  * @param {*options} options Yeah figure it out asshole. 
  * @returns a Request Promise
  */
-  Get = (options) => {
+  Get: (options) => {
     let route = options.route || ``;
     let parameters = options.parameters || ``;
     let token = options.token || ``;

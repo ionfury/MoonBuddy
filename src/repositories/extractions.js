@@ -9,7 +9,7 @@ module.exports = {
    * @param {string} token The access token.
    * @returns A RequestPromise.
    */
-  Get = (token) => {
+  Get: (token) => {
     return Esi.Get({
       token:accessToken, 
       route:`corporation/${Config.corporation_id}/mining/extractions/`
@@ -22,7 +22,7 @@ module.exports = {
    * @param {Promise} extractionsPromise the extractions promise.
    * @returns A RequestPromise.
    */
-  GetStructures = (accessTokenPromise, extractionsPromise) => {
+  GetStructures: (accessTokenPromise, extractionsPromise) => {
     return Promise.join(accessTokenPromise, extractionsPromise, (accessToken, extractions) => {
       var promises = [];
       

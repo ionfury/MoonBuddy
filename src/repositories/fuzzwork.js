@@ -5,7 +5,7 @@ module.exports = {
    * @param {string} stationId The station id.
    * @returns A RequestPromise.
    */
-  MarketData = (typeId, stationId = 60003760) => {
+  MarketData: (typeId, stationId = 60003760) => {
     let options = {
       method: 'GET',
       url: `https://market.fuzzwork.co.uk/aggregates/?station=${stationId}&types=${typeId}`

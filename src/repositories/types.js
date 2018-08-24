@@ -10,13 +10,13 @@ module.exports = {
    * @param {Promise} observedPromise the observed promise.
    * @returns A RequestPromise.
    */
-  TypeInfoList = (typeIds) => {
+  TypeInfoList: (typeIds) => {
     return Promise.map(typeIds, type => 
       Esi.Get({route:`universe/types/${type}`})
         .then(JSON.parse));
   },
 
-  TypeInfo = (typeId) => {
+  TypeInfo: (typeId) => {
     return Esi.Get({route:`universe/types/${type}`})
       .then(JSON.parse);
   },
@@ -26,7 +26,7 @@ module.exports = {
    * @param {string} name The name of the inventory type
    * @param {bool} strict If the search should be a strict match
    */
-  TypeId = (name, strict = true) => {
+  TypeId: (name, strict = true) => {
     let options = {
       route: 'search',
       parameters: `categories=inventory_type&search=${name}&strict=${strict}`

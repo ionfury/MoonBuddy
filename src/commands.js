@@ -16,7 +16,7 @@ module.exports = {
    * Displays all moons and products from data/eve/moons.json and if they are extracting.
    * @returns A promise returning a string.
    */
-  Owned = (search) => {
+  Owned: (search) => {
     let re = new RegExp(search, 'i');
     return Moons.Owned()
       .then(m => m.filter(i => re.test(i.ToString())))
@@ -26,7 +26,7 @@ module.exports = {
    * Displays all observers which are not extracting.
    * @returns A promise returning a string.
    */
-  Inactive = (search) => {
+  Inactive: (search) => {
     return Moons.Inactive()
       .then(Formatters.InactiveMoons);
   },
@@ -34,7 +34,7 @@ module.exports = {
    * Displays all moon extractions and the ore quantities and values.
    * @returns A promise returning a string.
    */
-  Schedule = (search) => {
+  Schedule: (search) => {
     let re = new RegExp(search, 'i');
     return Moons.ExtractingOres()
       .then(m => m.filter(i => re.test(i.ToString())))
@@ -45,7 +45,7 @@ module.exports = {
    * Displays all moon extractions exiting within {hours}
    * @returns A promise returning a string.
    */
-  ScheduledHours = (hours = 24) => {
+  ScheduledHours: (hours = 24) => {
     return Moons.ExtractingOres()
       .then(m => m.filter(i => r.hrsRemaining < hours))
       .then(sortMoonsByArrival)
@@ -55,7 +55,7 @@ module.exports = {
    * Display all ore values by their reprocessed materials.
    * @returns A promise returning a string.
    */
-  Values = (search) => {
+  Values: (search) => {
     let re = new RegExp(search, 'i');
     return OreValues.Get('jita')
       .then(o => o.filter(i => re.test(i.ToString())))
