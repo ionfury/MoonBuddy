@@ -83,7 +83,7 @@ module.exports = {
       url: `${url}/${server}/${route}?datasource=${datasource}&page=${page}&token=${token}&${parameters}`
     }
     
-    return RequestPromise(req);
+    return RequestPromise(req).then(JSON.parse);
   }
 }
 

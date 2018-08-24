@@ -1,7 +1,7 @@
 let Promise = require('bluebird');
 
-let Config = require('data/config.json');
-let Esi = include('src/repositories/esi.js');
+let Config = require('../../data/config.json');
+let Esi = require('./esi.js');
 
 module.exports = {
   /**
@@ -11,9 +11,9 @@ module.exports = {
    */
   Get: (token) => {
     return Esi.Get({
-      token:accessToken, 
+      token:token, 
       route:`corporation/${Config.corporation_id}/mining/observers/`
-    }).then(JSON.parse);
+    });
   },
 
   /**
@@ -27,10 +27,10 @@ module.exports = {
       var promises = [];
       
       observers.forEach(observer => 
-        promises.push(Esi.Get({
-          token:token, 
-          route:`corporation/${Config.corporation_id}/mining/observers/${observer.observer_id}/`})
-          .then(JSON.parse)));
+        promises.push(
+          Esi.Get({
+            token:token, 
+            route:`corporation/${Config.corporation_id}/mining/observers/${observer.observer_id}/`})));
   
       return Promise.all(promises);
     });
@@ -48,10 +48,9 @@ module.exports = {
   
       observers.forEach(observer => 
         promises.push(
-          Api.EsiGet({
+          Esi.Get({
             token:accessToken, 
-            route:`universe/structures/${observer.observer_id}/`})
-            .then(JSON.parse)));
+            route:`universe/structures/${observer.observer_id}/`})));
   
       return Promise.all(promises);
     });

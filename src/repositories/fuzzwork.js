@@ -1,3 +1,5 @@
+let RequestPromise = require('request-promise');
+
 module.exports = {
   /**
    * Gets a promise to return fuzzwork market data.
@@ -11,6 +13,6 @@ module.exports = {
       url: `https://market.fuzzwork.co.uk/aggregates/?station=${stationId}&types=${typeId}`
     }
   
-    return RequestPromise(options);
+    return RequestPromise(options).then(JSON.parse);
   }
 }

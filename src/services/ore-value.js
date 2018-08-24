@@ -1,8 +1,10 @@
-let Materials = include('data/eve/materials.json');
-let Reprocessing = include('data/eve/reprocessing.json');
-let Config = include('data/config.json');
+let Promise = require('bluebird');
 
-let MarketData = include('src/services/market-data.js');
+let Materials = require('../../data/eve/materials.json');
+let Reprocessing = require('../../data/eve/reprocessing.json');
+let Config = require('../../data/config.json');
+
+let MarketData = require('./market-data.js');
 
 module.exports = {
   /**

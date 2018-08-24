@@ -1,7 +1,7 @@
 let Promise = require('bluebird');
 
-let Config = require('data/config.json');
-let Esi = include('src/repositories/esi.js');
+let Config = require('../../data/config.json');
+let Esi = require('./esi.js');
 
 module.exports = {
   /**
@@ -10,15 +10,13 @@ module.exports = {
    * @param {Promise} observedPromise the observed promise.
    * @returns A RequestPromise.
    */
-  TypeInfoList: (typeIds) => {
-    return Promise.map(typeIds, type => 
-      Esi.Get({route:`universe/types/${type}`})
-        .then(JSON.parse));
+  InfoList: (typeIds) => {
+    return Promise.map(typeIds, typeId => 
+      Esi.Get({route:`universe/types/${typeId}`}));
   },
 
-  TypeInfo: (typeId) => {
-    return Esi.Get({route:`universe/types/${type}`})
-      .then(JSON.parse);
+  Info: (typeId) => {
+    return Esi.Get({route:`universe/types/${typeId}`});
   },
 
   /**
@@ -26,14 +24,13 @@ module.exports = {
    * @param {string} name The name of the inventory type
    * @param {bool} strict If the search should be a strict match
    */
-  TypeId: (name, strict = true) => {
+  Id: (name, strict = true) => {
     let options = {
       route: 'search',
       parameters: `categories=inventory_type&search=${name}&strict=${strict}`
     }
 
-    Esi.Get(options)
-      .then(JSON.parse)
+    return Esi.Get(options)
       .then(res => {
         if(!res.inventory_type)
           throw new Error(`Inventorytype not found for '${item}'!`);

@@ -1,10 +1,14 @@
-let Config = include('data/config.json');
-let Moons = include('data/eve/moons.json');
+let DateDiff = require(`date-diff`);
+let Promise = require('bluebird');
 
-let Esi = include('src/repositories/esi.js');
-let Extractions = include('src/repositories/extractions.js');
-let Observers = include('src/repositories/observers.js');
-let OreValue = include('src/services/ore-value.js');
+let Config = require('../../data/config.json');
+
+let Esi = require('../repositories/esi.js');
+let Extractions = require('../repositories/extractions.js');
+let Observers = require('../repositories/observers.js');
+let OreValue = require('./ore-value.js');
+
+let Moons = require('../../data/eve/moons.json');
 
 module.exports = {
   /**
@@ -72,7 +76,7 @@ module.exports = {
         return {
           name: data.moon.name,
           hrsRemaining: data.hrsRemaining,
-          hrsTotal: data.hrs.Total,
+          hrsTotal: data.hrsTotal,
           ores: ores
         };
       });
@@ -87,8 +91,6 @@ module.exports = {
     let observerStructuresPromise = Observers.GetStructures(tokenPromise, observersPromise);
 
     return Promise.join(observerStructuresPromise, observedPromise, (structures, observed) => {
-      console.log(structures, observed);
-
       let extracted = {}; //get distinct observed structures
       
       let notExtracting = extracted.filter(s => structures.some(i => i == s));
@@ -99,7 +101,7 @@ module.exports = {
 
   Owned: (search) => {
     let tokenPromise = Esi.RefreshToken(process.env.refresh_token);
-    let extractionsPromises = tokenPromise.then(Extractions.Get);
+    let extractionsPromise = tokenPromise.then(Extractions.Get);
 
     return extractionsPromise.then(extractions => {
       let extractingMoons = Array.from(new Set(Moons.map(m => {

@@ -1,7 +1,7 @@
 let Promise = require('bluebird');
 
-let Config = require('data/config.json');
-let Esi = include('src/repositories/esi.js');
+let Config = require('../../data/config.json');
+let Esi = require('./esi.js');
 
 module.exports = {
   /**
@@ -11,9 +11,9 @@ module.exports = {
    */
   Get: (token) => {
     return Esi.Get({
-      token:accessToken, 
+      token:token, 
       route:`corporation/${Config.corporation_id}/mining/extractions/`
-    }).then(JSON.parse);
+    });
   },
 
   /**
@@ -31,7 +31,7 @@ module.exports = {
           Esi.Get({
             token:accessToken, 
             route:`universe/structures/${extractor.structure_id}/`
-          }).then(JSON.parse)));
+          })));
   
       return Promise.all(promises);
     });

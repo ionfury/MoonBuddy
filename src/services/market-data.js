@@ -1,6 +1,7 @@
+let Promise = require('bluebird');
 
-let Types = include('src/repositories/Types.js');
-let Fuzzwork = include('src/repositories/Fuzzwork.js');
+let Types = require('../repositories/Types.js');
+let Fuzzwork = require('../repositories/Fuzzwork.js');
 
 module.exports = {
   /**
@@ -40,11 +41,10 @@ module.exports = {
         throw new Error(`System '${system}' must be either jita, amarr, dodixie, rens, or hek.`);
     }
 
-    let itemIdPromise = Types.TypeId(item).then(items => items.inventory_type.shift());
-    let typeInfoPromise = itemIdPromise.then(Types.TypeInfo);
+    let itemIdPromise = Types.Id(item);
+    let typeInfoPromise = itemIdPromise.then(Types.Info);
     let marketPromise = itemIdPromise
-      .then(itemId => Fuzzwork.MarketData(itemId, stationId))
-      .then(JSON.parse);
+      .then(itemId => Fuzzwork.MarketData(itemId, stationId));
       
     return Promise.join(typeInfoPromise, marketPromise, (typeInfo, marketData) => {
       return {
