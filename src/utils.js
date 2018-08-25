@@ -48,6 +48,7 @@ module.exports = {
    * 
    */
   PrettyNumber: (number) => {
+    number = parseFloat(number);
     let length = Math.round(number).toString().length;
     let pretty = ``;
   

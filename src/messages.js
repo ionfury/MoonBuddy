@@ -14,16 +14,16 @@ module.exports = {
     `All moons are extracting!`,
   
   MoonOres: (name, hrs, ores) => 
-    `in ${hrs} hrs\n\t${name}\n\t\t${ores}`,
+    `in ${hrs} hrs\n\t${name}\n\t\t${ores.join('\n\t\t')}`,
   
   NotExtracting: (names) => 
     `The following structures are not extracting: ${names.join(', ')}!`,
   
   OrePercent: (ore, pcnt) => 
-    `${ore}: ${Math.round(pcnt*100,2)}%`,
+    `${ore}: ${Math.round(parseFloat(pcnt)*100,2)}%`,
   
   OreValue: (qty, hrs, prd, val, vol, rate) => 
-    `${Utilities.PrettyNumber(qty*hrs*rate)} m3 ${prd} (${Utilities.PrettyNumber(val/vol)} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol)} isk total)`,
+    `${Utilities.PrettyNumber(parseFloat(qty)*parseFloat(hrs)*parseFloat(rate))} m3 ${prd} (${Utilities.PrettyNumber(parseFloat(val)/parseFloat(vol))} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol)} isk total)`,
   
   OwnedMoon: (ext, moon, ores) => 
     `${ext ? '[EXTRACTING] ' : ''} ${moon} - ${ores}`,
@@ -38,5 +38,5 @@ module.exports = {
     `Bot has started, with ${usrs} users, in ${chans} channels of ${guilds} guilds.`,
 
   Value: (ore, val, vol) => 
-    `${ore}: ${Utilities.PrettyNumber(val/vol)} isk/m3`
+    `${ore}: ${Utilities.PrettyNumber(parseFloat(val)/parseFloat(vol))} isk/m3`
 }

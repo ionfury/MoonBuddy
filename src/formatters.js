@@ -61,8 +61,7 @@ module.exports = {
                 o.product, 
                 o.value, 
                 o.volume, 
-                Config.refine_rate))
-              .join('\n')))));
+                Config.refine_rate))))));
   
       return strings.join('\n');
   },

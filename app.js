@@ -36,31 +36,31 @@ Client.on('message', msg => {
     case 'owned':
       Commands.Owned(param)
         .then(Utilities.SplitString)
-        .then(m => msg.author.send(m))
+        .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'inactive':
       Commands.Inactive(param)
         .then(Utilities.SplitString)
-        .then(m => msg.author.send(m))
+        .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'schedule':
       Commands.Schedule(param)
         .then(Utilities.SplitString)
-        .then(m => msg.author.send(m))
+        .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'values':
       Commands.Values(param)
         .then(Utilities.SplitString)
-        .then(m => msg.author.send(m))
+        .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'announce':
       Commands.ScheduledHours(param)
         .then(Utilities.SplitString)
-        .then(m => msg.author.send(m))
+        .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
   }
