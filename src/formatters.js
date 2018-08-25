@@ -40,7 +40,7 @@ module.exports = {
     let valubleOres = moons
       .map(m => m.ores)
       .reduce((prev, curr) => prev.concat(curr))
-      .filter(o => o.value/ore.value > Config.buyback_minimum)
+      .filter(o => o.value/o.volume > Config.buyback_minimum)
       .map(o => o.product);
   
     if(valubleOres.length > 0)
