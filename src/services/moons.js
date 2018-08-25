@@ -34,9 +34,9 @@ module.exports = {
 
         return uniqueIds.map(id => {
           let moon = Moons.find(m => m.moonID == id);
-          let extraction = extractions.filter(e => e.moon_id == id);
-          let chunkArrivalTime = new Date(extraction.chunk_arrival_time);
-          let extractionStartTime = new Date(extraction.extraction_start_time);
+          let extraction = extractions.filter(e => e.moon_id == id)[0];
+          let chunkArrivalTime = Date.parse(extraction.chunk_arrival_time);
+          let extractionStartTime = Date.parse(extraction.extraction_start_time);
 
           let now = new Date();
           let hrsTotal = new DateDiff(chunkArrivalTime, extractionStartTime);

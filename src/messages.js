@@ -1,4 +1,5 @@
 let Utilities = require('./utils.js');
+let Config = require('../data/config.json');
 
 module.exports = {
   Alert: (rate, ores) => 
@@ -23,7 +24,7 @@ module.exports = {
     `${ore}: ${Math.round(parseFloat(pcnt)*100,2)}%`,
   
   OreValue: (qty, hrs, prd, val, vol, rate) => 
-    `${Utilities.PrettyNumber(parseFloat(qty)*parseFloat(hrs)*parseFloat(rate))} m3 ${prd} (${Utilities.PrettyNumber(parseFloat(val)/parseFloat(vol))} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol)} isk total)`,
+    `${Utilities.PrettyNumber(qty*hrs*rate)} m3 ${prd} (${Utilities.PrettyNumber(val/vol)} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol*Config.extraction_amount_per_hour)} isk total)`,
   
   OwnedMoon: (ext, moon, ores) => 
     `${ext ? '[EXTRACTING] ' : ''} ${moon} - ${ores}`,

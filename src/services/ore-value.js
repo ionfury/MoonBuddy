@@ -26,7 +26,7 @@ module.exports = {
           .map(ore => {
             let value = 0;
             prices.forEach(price => value += ore[price.name] * price.buy);
-            value = value / ore.Required * Config.refine_rate * Config.value_multiplier;
+            value = value / ore.Required * Config.refine_rate * Config.ore_value_multiplier;
 
             return {
               name: ore.Ore,

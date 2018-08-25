@@ -20,7 +20,7 @@ module.exports = {
             m.name,
             m.ores.map(o =>
               Messages.OrePercent(
-                o.name,
+                o.product,
                 o.quantity
             ))
             .join(', ')))));
@@ -56,12 +56,12 @@ module.exports = {
             m.hrsRemaining, 
             m.ores.map(o => 
               Messages.OreValue(
-                o.quantity, 
-                m.hrsTotal, 
+                parseFloat(o.quantity), 
+                parseFloat(m.hrsTotal), 
                 o.product, 
-                o.value, 
-                o.volume, 
-                Config.refine_rate))))));
+                parseFloat(o.value), 
+                parseFloat(o.volume), 
+                parseFloat(Config.refine_rate)))))));
   
       return strings.join('\n');
   },

@@ -15,50 +15,57 @@ module.exports = {
    * Displays all moons and products from data/eve/moons.json and if they are extracting.
    * @returns A promise returning a string.
    */
-  Owned: (search) => {
+  Owned: (search, limit = 5) => {
     let re = new RegExp(search, 'i');
     return Moons.Owned()
       .then(m => m.filter(i => re.test(JSON.stringify(i))))
+      .then(m => m.slice(limit))
       .then(Formatters.OwnedMoons);
   },
   /**
    * Displays all observers which are not extracting.
    * @returns A promise returning a string.
    */
-  Inactive: (search) => {
-    return Moons.Inactive(search)
+  Inactive: (search, limit = 5) => {
+    let re = new RegExp(search, 'i');
+    return Moons.Inactive()
+      .then(m => m.filter(i => re.test(JSON.stringify(i))))
+      .then(m => m.slice(limit))
       .then(Formatters.InactiveMoons);
   },
   /**
    * Displays all moon extractions and the ore quantities and values.
    * @returns A promise returning a string.
    */
-  Schedule: (search) => {
+  Schedule: (search, limit = 5) => {
     let re = new RegExp(search, 'i');
     return Moons.ExtractingOres()
       .then(m => m.filter(i => re.test(JSON.stringify(i))))
       .then(sortMoonsByArrival)
+      .then(m => m.slice(limit))
       .then(Formatters.ExtractingOres);
   },
   /**
    * Displays all moon extractions exiting within {hours}
    * @returns A promise returning a string.
    */
-  ScheduledHours: (hours = 24) => {
+  ScheduledHours: (hours = 24, limit = 5) => {
     return Moons.ExtractingOres()
       .then(m => m.filter(i => i.hrsRemaining < hours))
       .then(sortMoonsByArrival)
+      .then(m => m.slice(limit))
       .then(Formatters.ExtractingOres);
   },
   /**
    * Display all ore values by their reprocessed materials.
    * @returns A promise returning a string.
    */
-  Values: (search) => {
+  Values: (search, limit = 5) => {
     let re = new RegExp(search, 'i');
     return OreValue.Get('jita')
       .then(o => o.filter(i => re.test(JSON.stringify(i))))
-      .then(Formatters.OreValue);
+      .then(m => m.slice(limit))
+      .then(Formatters.OreValues);
   }
 }
 
