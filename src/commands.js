@@ -19,7 +19,6 @@ module.exports = {
     let re = new RegExp(search, 'i');
     return Moons.Owned()
       .then(m => m.filter(i => re.test(JSON.stringify(i))))
-      .then(m => m.slice(limit))
       .then(Formatters.OwnedMoons);
   },
   /**
@@ -30,7 +29,6 @@ module.exports = {
     let re = new RegExp(search, 'i');
     return Moons.Inactive()
       .then(m => m.filter(i => re.test(JSON.stringify(i))))
-      .then(m => m.slice(limit))
       .then(Formatters.InactiveMoons);
   },
   /**
@@ -53,18 +51,16 @@ module.exports = {
     return Moons.ExtractingOres()
       .then(m => m.filter(i => i.hrsRemaining < hours))
       .then(sortMoonsByArrival)
-      .then(m => m.slice(limit))
       .then(Formatters.ExtractingOres);
   },
   /**
    * Display all ore values by their reprocessed materials.
    * @returns A promise returning a string.
    */
-  Values: (search, limit = 5) => {
+  Values: (search) => {
     let re = new RegExp(search, 'i');
     return OreValue.Get('jita')
       .then(o => o.filter(i => re.test(JSON.stringify(i))))
-      .then(m => m.slice(limit))
       .then(Formatters.OreValues);
   }
 }
