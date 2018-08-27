@@ -22,6 +22,10 @@ Client.on('message', msg => {
   
   var args = msg.content.slice(Config.prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
+  
+  let param = '';
+  if(args.length > 0 && command != 'mined')
+    param = args.shift().toLowerCase();
   console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
   switch(command)
@@ -31,45 +35,30 @@ Client.on('message', msg => {
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'owned':
-      let param = '';
-      if(args.length > 0)
-        param = args.shift().toLowerCase();
       Commands.Owned(param)
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'inactive':
-      let param = '';
-      if(args.length > 0)
-        param = args.shift().toLowerCase();
       Commands.Inactive(param)
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'schedule':
-      let param = '';
-      if(args.length > 0)
-        param = args.shift().toLowerCase();
       Commands.Schedule(param)
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'values':
-      let param = '';
-      if(args.length > 0)
-        param = args.shift().toLowerCase();
       Commands.Values(param)
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'announce':
-      let param = '';
-      if(args.length > 0)
-        param = args.shift().toLowerCase();
       Commands.ScheduledHours(param)
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
