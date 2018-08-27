@@ -34,37 +34,37 @@ Client.on('message', msg => {
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'owned':
-      Commands.Owned(param)
+      Commands.Owned(args.shift().toLowerCase())
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'inactive':
-      Commands.Inactive(param)
+      Commands.Inactive(args.shift().toLowerCase())
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'schedule':
-      Commands.Schedule(param)
+      Commands.Schedule(args.shift().toLowerCase())
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'values':
-      Commands.Values(param)
+      Commands.Values(args.shift().toLowerCase())
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'announce':
-      Commands.ScheduledHours(param)
+      Commands.ScheduledHours(args.shift().toLowerCase())
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
     case 'mined':
-      Commands.Tax(param)
+      Commands.Tax(args.join(' ').toLowerCase())
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
