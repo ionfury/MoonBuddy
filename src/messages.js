@@ -24,7 +24,7 @@ module.exports = {
     `${ore}: ${Math.round(parseFloat(pcnt)*100,2)}%`,
   
   OreValue: (qty, hrs, prd, val, vol, rate) => 
-    `${Utilities.PrettyNumber(qty*hrs*rate)} m3 ${prd} (${Utilities.PrettyNumber(val/vol)} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol*Config.extraction_amount_per_hour)} isk total)`,
+    `${Utilities.PrettyNumber(qty*hrs*rate*Config.extraction_amount_per_hour)} m3 ${prd} (${Utilities.PrettyNumber(val/vol)} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol*Config.extraction_amount_per_hour)} isk total)`,
   
   OwnedMoon: (ext, moon, ores) => 
     `${ext ? '[EXTRACTING] ' : ''} ${moon} - ${ores}`,
