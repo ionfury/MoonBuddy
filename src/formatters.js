@@ -86,12 +86,13 @@ module.exports = {
             n, 
             begin,
             end, 
-            Object.keys(ores[n]).map(o => 
+            Object.keys(ores[n])
+            .sort()
+            .map(o => 
               Messages.OreQty(
                 o, 
                 ores[n][o])))))});
-    
-                console.log(strings);
+                
     return strings.join('\n');
   }
 }
