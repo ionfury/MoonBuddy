@@ -43,6 +43,7 @@ module.exports = {
     return Moons.ExtractingOres()
       .then(m => m.filter(i => re.test(JSON.stringify(i))))
       .then(sortMoonsByArrival)
+      .then(a => a.slice(0, Math.min(a.length, 5)))
       .then(Formatters.ExtractingOres);
   },
   /**

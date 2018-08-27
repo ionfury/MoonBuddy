@@ -18,10 +18,12 @@ module.exports = {
     let minedNamesPromise = Promise.map(minedIdsPromise, type => Types.Info(type)).then(a => a.map(i => i.name));
 
     let minedPromise = Promise.join(charIdPromise, ledgerPromise, (id, ledger) => {
-      let authId = ledger.find(a => a.character_id == id).auth_id;
+      let auth = ledger.find(a => a.character_id == id);
 
-      if(!authId)
+      if(!auth)
         throw new Error(`No mining entries found for ${name} (id:${id})!`);
+
+      let authId = auth.auth_id;
 
       let authMined = ledger.filter(e => e.auth_id == authId);
       let grouped = GroupArray(authMined, 'character_id', 'type_id');
