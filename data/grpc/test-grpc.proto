@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package grpc_ledger;
+
+message LedgerEntry {
+    int64 timestamp = 1;
+    int64 solar_system_id = 2;
+    int64 type_id = 3;
+    int64 quantity = 4;
+    int64 character_id = 5;
+    int32 auth_id = 6;
+    int64 corporation_id = 7;
+}
+
+message CorpMiningLedgerRequest {
+    string token = 1;
+    int64 corp_id = 2;
+    int64 beginning_timestamp = 3;
+    int64 ending_timestamp = 4;
+}
+
+message CorpMiningLedgerResponse {
+    bool success = 1;
+    string message = 2;
+    int64 corporation_id = 3;
+    LedgerEntry entry = 4;
+}
+
+message UserMiningLedgerRequest {
+    string token = 1;
+    reserved 2;
+    int64 beginning_timestamp = 3;
+    int64 ending_timestamp = 4;
+    int32 auth_id = 5;
+}
+
+message UserMiningLedgerResponse {
+    bool success = 1;
+    string message = 2;
+    LedgerEntry entry = 3;
+}
+
+message CharacterMiningLedgerRequest {
+    string token = 1;
+    reserved 2;
+    int64 beginning_timestamp = 3;
+    int64 ending_timestamp = 4;
+    int64 character_id = 5;
+}
+
+message CharacterMiningLedgerResponse {
+    bool success = 1;
+    string message = 2;
+    LedgerEntry entry = 3;
+}
+
+service LedgerService {
+    rpc GetCorpLedger(CorpMiningLedgerRequest) returns (stream CorpMiningLedgerResponse);
+    rpc GetUserLedger(UserMiningLedgerRequest) returns (stream UserMiningLedgerResponse);
+    rpc GetCharacterLedger(CharacterMiningLedgerRequest) returns (stream CharacterMiningLedgerResponse);
+}

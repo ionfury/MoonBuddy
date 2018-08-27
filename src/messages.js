@@ -9,7 +9,7 @@ module.exports = {
     `\`${text}\``,
 
   CodeBlock: (text) => 
-    `\`\`\`${text}\`\`\``,
+    `\`\`\`javascript\n${text}\`\`\``,
   
   Extracting: () => 
     `All moons are extracting!`,
@@ -39,5 +39,11 @@ module.exports = {
     `Bot has started, with ${usrs} users, in ${chans} channels of ${guilds} guilds.`,
 
   Value: (ore, val, vol) => 
-    `${ore}: ${Utilities.PrettyNumber(parseFloat(val)/parseFloat(vol))} isk/m3`
+    `${ore}: ${Utilities.PrettyNumber((val)/(vol))} isk/m3`,
+
+  CharMined: (name, begin, end, ores) => 
+    `between ${begin} and ${end}, '${name}' mined:\n\t${ores.join('\n\t')}`,
+  
+  OreQty: (name, qty) =>
+    `${name}: ${Utilities.PrettyNumber(qty)} units`
 }

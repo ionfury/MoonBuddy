@@ -63,6 +63,12 @@ Client.on('message', msg => {
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));
       break;
+    case 'mined':
+      Commands.Tax(param)
+        .then(Utilities.SplitString)
+        .then(a => a.forEach(m => msg.author.send(m)))
+        .catch(err => msg.channel.send(dump(err)));
+      break;
   }
 });
 
