@@ -23,8 +23,8 @@ Client.on('message', msg => {
   var args = msg.content.slice(Config.prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
   var param = '';
-  if(args.length > 0)
-    param = args.shift().toLowerCase();
+  //if(args.length > 0)
+  //  param = args.shift().toLowerCase();
   console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
   switch(command)
