@@ -24,6 +24,7 @@ message CorpMiningLedgerResponse {
     string message = 2;
     int64 corporation_id = 3;
     LedgerEntry entry = 4;
+    bool finished = 5;
 }
 
 message UserMiningLedgerRequest {

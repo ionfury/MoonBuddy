@@ -12,7 +12,7 @@ it('Irs.Tax(`ion fury`, 1091440439, 1526688000.0, 1626688000.0 should return arr
   let date = new Date(), y = date.getFullYear(), m = date.getMonth();
   let begin = new Date(y, m, 1);
   let end = new Date(y, m + 1, 0);
-  let res = await Irs.Tax('Spark Progenitori', 1091440439, begin, end);
+  let res = await Irs.Tax('Ion fury', 1091440439, begin, end);
   
   Expect(res).to.be.a('object');
 });

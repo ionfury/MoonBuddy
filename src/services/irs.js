@@ -10,7 +10,8 @@ module.exports = {
     let charIdPromise = Characters.Id(name);
     let ledgerPromise = TestGrpc
       .GetCorpLedger(corpId, begin, end)
-      .then(arr => arr.map(i => i.entry));
+      .then(arr => arr.map(i => i.entry))
+      .then(arr => arr.filter(n => n));
 
     let minedIdsPromise = ledgerPromise
       .then(l => Array.from(new Set(l.map(e => e.type_id))));
