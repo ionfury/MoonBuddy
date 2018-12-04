@@ -3,7 +3,7 @@ let Config = require('../data/config.json');
 
 module.exports = {
   Alert: (rate, ores) => 
-    `@everyone:\n The corp needs you to mine and contract the following ores to corp: @ ${rate} isk/m3: ${ores.map(o => `**${o}**`).join(', ')}`,
+    `@here:\n The corp needs you to mine and contract the following ores to corp: @ ${rate} isk/m3: ${ores.map(o => `**${o}**`).join(', ')}`,
   
   Code: (text) => 
     `\`${text}\``,
