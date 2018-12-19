@@ -8,7 +8,7 @@
     "inactive - displays moons which are not scheduled or active.",
     "mined [character] - displays ore mined in current month by all characters associated with [character]."
   ],  
-  "url":"https://esi.tech.ccp.is",
+  "url":"esi.evetech.net",
   "server":"latest",
   "prefix": "!",
   "corporation_id": 1091440439,
