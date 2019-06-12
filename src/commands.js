@@ -1,7 +1,10 @@
-let Config = require('../data/config.json')
+let Config = require('../data/config.json');
 let Moons = require('./services/moons.js');
+let Irs = require('./services/irs.js');
 let OreValue = require('./services/ore-value.js');
 let Formatters = require('./formatters.js');
+let Moment = require('moment');
+
 
 module.exports = {
   /**
@@ -40,6 +43,7 @@ module.exports = {
     return Moons.ExtractingOres()
       .then(m => m.filter(i => re.test(JSON.stringify(i))))
       .then(sortMoonsByArrival)
+      .then(a => a.slice(0, Math.min(a.length, 5)))
       .then(Formatters.ExtractingOres);
   },
   /**
@@ -61,6 +65,14 @@ module.exports = {
     return OreValue.Get('jita')
       .then(o => o.filter(i => re.test(JSON.stringify(i))))
       .then(Formatters.OreValues);
+  },
+
+  Tax: (name) => {
+    let date = new Date(), y = date.getFullYear(), m = date.getMonth();
+    let begin = new Date(y, m, 1);
+    let end = new Date(y, m + 1, 0);
+    return Irs.Tax(name, Config.corporation_id, begin, end)
+      .then(r => Formatters.Tax(r, Moment(begin).format('MM-DD'), Moment(end).format('MM-DD')));
   }
 }
 

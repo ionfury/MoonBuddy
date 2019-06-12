@@ -22,8 +22,9 @@ Client.on('message', msg => {
   
   var args = msg.content.slice(Config.prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
-  var param = '';
-  if(args.length > 0)
+  
+  let param = '';
+  if(args.length > 0 && command != 'mined')
     param = args.shift().toLowerCase();
   console.log(`\nCommand received: ${command}, with arguments: ${args.join(', ')}, from user ${msg.author}.`);
 
@@ -59,6 +60,12 @@ Client.on('message', msg => {
       break;
     case 'announce':
       Commands.ScheduledHours(param)
+        .then(Utilities.SplitString)
+        .then(a => a.forEach(m => msg.author.send(m)))
+        .catch(err => msg.channel.send(dump(err)));
+      break;
+    case 'mined':
+      Commands.Tax(args.join(' ').toLowerCase())
         .then(Utilities.SplitString)
         .then(a => a.forEach(m => msg.author.send(m)))
         .catch(err => msg.channel.send(dump(err)));

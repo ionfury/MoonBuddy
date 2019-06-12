@@ -2,6 +2,7 @@ let Config = require('../data/config.json');
 
 let Messages = require('./messages.js');
 
+
 module.exports = {
   /**
    * 
@@ -72,5 +73,26 @@ module.exports = {
 
   InactiveMoons: (moons) => {
 
+  },
+
+  Tax: (ores, begin, end) => {
+    let strings = [];
+
+    let charNames = Object.keys(ores);
+    charNames.forEach(n => {
+      strings.push(
+        Messages.CodeBlock(
+          Messages.CharMined(
+            n, 
+            begin,
+            end, 
+            Object.keys(ores[n])
+            .sort()
+            .map(o => 
+              Messages.OreQty(
+                o, 
+                ores[n][o])))))});
+                
+    return strings.join('\n');
   }
 }

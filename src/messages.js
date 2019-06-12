@@ -9,7 +9,7 @@ module.exports = {
     `\`${text}\``,
 
   CodeBlock: (text) => 
-    `\`\`\`${text}\`\`\``,
+    `\`\`\`javascript\n${text}\`\`\``,
   
   Extracting: () => 
     `All moons are extracting!`,
@@ -24,7 +24,7 @@ module.exports = {
     `${ore}: ${Math.round(parseFloat(pcnt)*100,2)}%`,
   
   OreValue: (qty, hrs, prd, val, vol, rate) => 
-    `${Utilities.PrettyNumber(qty*hrs*rate)} m3 ${prd} (${Utilities.PrettyNumber(val/vol)} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol*Config.extraction_amount_per_hour)} isk total)`,
+    `${Utilities.PrettyNumber(qty*hrs*rate*Config.extraction_amount_per_hour)} m3 ${prd} (${Utilities.PrettyNumber(val/vol)} isk/m3, ${Utilities.PrettyNumber(qty*hrs*rate*val/vol*Config.extraction_amount_per_hour)} isk total)`,
   
   OwnedMoon: (ext, moon, ores) => 
     `${ext ? '[EXTRACTING] ' : ''} ${moon} - ${ores}`,
@@ -40,4 +40,10 @@ module.exports = {
 
   Value: (ore, val, vol) => 
     `${ore}: ${Utilities.PrettyNumber(parseFloat(val)/parseFloat(vol))} isk/m3`
+
+  CharMined: (name, begin, end, ores) => 
+    `between ${begin} and ${end}, '${name}' mined:\n\t${ores.join('\n\t')}`,
+  
+  OreQty: (name, qty) =>
+    `${name}: ${Utilities.PrettyNumber(qty)} units`
 }

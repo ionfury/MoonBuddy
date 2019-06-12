@@ -5,9 +5,10 @@
     "owned [search] - displays SUAD owned moons containing [search]",
     "schedule [search] - displays extraction schedule containing [search]",
     "values [search] - displays all current ore prices at jita buy value & 89.3% reprocessing containing [search]",
-    "inactive - displays moons which are not scheduled or active."
+    "inactive - displays moons which are not scheduled or active.",
+    "mined [character] - displays ore mined in current month by all characters associated with [character]."
   ],  
-  "url":"https://esi.tech.ccp.is",
+  "url":"https://esi.evetech.net",
   "server":"latest",
   "prefix": "!",
   "corporation_id": 1091440439,
