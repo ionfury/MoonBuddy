@@ -30,5 +30,5 @@ it('Command.Values should return a string', async () => {
   process.env.client_id = TestData.client_id;
   process.env.client_secret = TestData.client_secret;
   let res = await Commands.Values('');
-  Expect(res).to.ba.a('string');
+  Expect(res).to.be.a('string');
 });
