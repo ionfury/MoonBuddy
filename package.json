@@ -17,7 +17,7 @@
     "dateformat": "^3.0.2",
     "discord.js": "^11.2.1",
     "group-array": "^0.3.3",
-    "grpc": "^1.14.1",
+    "grpc": "^1.24.9",
     "grpc-promise": "^1.1.0",
     "moment": "^2.22.2",
     "mongodb": "^2.2.33",
